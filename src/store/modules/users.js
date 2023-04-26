@@ -3,7 +3,7 @@ import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 
 const axiosInstance = axios.create({
-    baseURL: 'http://44.203.185.148:8000',
+    baseURL: 'https:/matjaryapi.online',
 });
 
 const state = {

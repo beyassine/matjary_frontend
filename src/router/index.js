@@ -1,7 +1,7 @@
 import store from '../store';
 import { createRouter, createWebHistory } from 'vue-router'
 
-
+import HomeView from '../views/HomeView.vue'
 import SignupView from '../views/SignupView.vue'
 import LoginView from '../views/LoginView.vue'
 import NotFound from '../views/404.vue'
@@ -23,6 +23,12 @@ import AdminSellerView from '../views/AdminSellerView.vue'
 
 
 const routes = [
+  {
+    path: '',
+    name: 'home',
+    meta: { extend: true },
+    component: HomeView
+  },  
   {
     path: '/signup',
     name: 'signup',

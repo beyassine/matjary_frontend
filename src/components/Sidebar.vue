@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer
     class="lg-and-down elevation-3 text-right"
-    width="200"
+    width="180"
     location="right"
   >
     <v-list density="compact" class="mt-2" nav>

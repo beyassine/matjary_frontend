@@ -21,7 +21,7 @@ const refreshToken = (refresh_token) => {
 
 
 const axiosInstance = axios.create({
-    baseURL: 'http://44.203.185.148:8000',
+    baseURL: 'https:/matjaryapi.online',
 });
 
 axiosInstance.interceptors.request.use((req) => {

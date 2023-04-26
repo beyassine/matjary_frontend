@@ -30,6 +30,6 @@ export default {
 </script>
 <style scoped>
 .main-btn{
-  background-image: linear-gradient(to top left, rgba(18, 140, 126,.8), rgba(18, 140, 126,.8)));
+  background-image: linear-gradient(to top left, rgba(18, 140, 126,.8), rgba(18, 140, 126,.8));
 }
 </style>
