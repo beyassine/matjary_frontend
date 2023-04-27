@@ -2,9 +2,6 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 
-const axiosInstance = axios.create({
-    baseURL: 'https:/matjaryapi.online',
-});
 
 const state = {
     isAuthenticated: false,
@@ -49,7 +46,7 @@ const actions = {
     },
     loginUser(context, usercredentials) {
         return new Promise((resolve, reject) => {
-            axiosInstance.post('/user/login', {
+            axios.post('https:/matjaryapi.online/user/login', {
                 username: usercredentials.username,
                 password: usercredentials.password,
             }
