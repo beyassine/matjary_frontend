@@ -1,10 +1,6 @@
 <template>
-  <v-app-bar class="d-flex justify-end border" elevation="0">
-    <v-app-bar-nav-icon
-      class="text-light-green-lighten-2 d-lg-none"
-      variant="text"
-      @click.native="toggleSidebar"
-    ></v-app-bar-nav-icon>
+  <v-app-bar :class="bordered == 'true' ? 'd-flex justify-end border' : 'd-flex justify-end' " elevation="0">
+    <v-app-bar-nav-icon class="text-white" varian></v-app-bar-nav-icon>
     <template v-slot:append>
       <v-img aspect-ratio="16/9" width="180" :src="logo"></v-img>
     </template>
@@ -12,12 +8,14 @@
 </template>
 
 <script>
+
+
 import logo from "../assets/matjary_logo_g.png";
 import { useDisplay } from "vuetify";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "Header",
+  name: "ExtendHeader",
 
   setup() {
     const { display } = useDisplay();
@@ -27,14 +25,21 @@ export default {
       logo: logo,
     };
   },
+  props: {
+    bordered: {
+      type: String,
+    },
+  },
+
   computed: {
-    ...mapGetters(["getOpen","getUserRole"]),
+    ...mapGetters(["getOpen", "getUserRole"]),
   },
   methods: {
     toggleSidebar() {
       this.emitter.emit("toggle-sidebar", !this.getOpen);
     },
   },
-  mounted() {},
+  mounted() { },
 };
 </script>
+  

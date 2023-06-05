@@ -34,7 +34,7 @@ const actions = {
 
   async fetchProducts({ commit },storeId) {
     const response = await axiosInstance.get(
-      `/product/get/${storeId}`
+      `/product/getstore/${storeId}`
     );
     commit('setProducts', response.data);
   },

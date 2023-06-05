@@ -3,7 +3,7 @@
     <Header v-if="!this.$route.meta.extend" />
     <Sidebar v-if="!this.$route.meta.extend"/>
     <MobileSidebar v-if="!this.$route.meta.extend"/>
-    <v-main :class="!this.$route.meta.extend? 'main': '' ">      
+    <v-main class="main">      
       <router-view/>      
     </v-main> 
   </v-app>
@@ -52,6 +52,9 @@ export default {
 .container{
   margin: auto;
   padding: 20px;
+}
+.row-container{
+  background-color: white;
 }
 .breadcrumb{
   background-color: rgb(230, 230, 230);

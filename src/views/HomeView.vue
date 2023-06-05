@@ -1,87 +1,99 @@
 <template>
-    <v-app-bar class="d-flex justify-end" elevation="0">
-        <template v-slot:append>
-            <v-img aspect-ratio="16/9" width="180" :src="logo"></v-img>
-        </template>
-        <template v-slot:prepend>
-            <router-link class="text-decoration-none" to="login">
-                <v-btn class="header-btn" rounded="pill" size="large" variant="elevated">
-                    <div class="text-h6 text-white font-weight-black ">
-                        دخول
-                        <v-icon class="ml-2 ">mdi-lock</v-icon>
-                    </div>
-                </v-btn>
-            </router-link>
-        </template>
-    </v-app-bar>
-    <v-card class="hero">
-        <v-row class="d-flex justify-center">
-            <v-col class="text-center" cols="12" md="6">
-                <div class=" text-h3 font-weight-black mb-5">طور تجارتك الآن </div>
-                <div class="text-h5 mt-3 mb-5">
-                    يمكنك تصفح و بيع مجموعة واسعة من المنتجات دون القلق بشأن المخزون أو الشحن
-                </div>
-                <router-link class="text-decoration-none" to="signup">
-                    <v-btn rounded="pill" color="white" size="x-large" variant="elevated" class="mt-5">
-                        <div class="text-h5 text-green-darken-3 font-weight-black ">
-                            أنشئ حسابك
-                            <v-icon class="ml-2 ">mdi-arrow-right-circle</v-icon>
+    <ExtendHeader bordered="true" />
+    <div class="homecontainer">
+        <v-row class="d-flex flex-row-reverse">
+            <v-col v-for="(product, index) in allproducts" :key="product.id" :cols="$vuetify.display.smAndUp ? '4' : '12'">
+                <v-card class="mx-auto " :to="{
+                    name: 'productdetail',
+                    params: { productId: product.id },
+                }">
+                    <div class="d-flex flex-no-wrap justify-space-between">
+
+                        <v-avatar class="ma-3" size="125" rounded="0">
+                            <v-img :src="product.images == null || product.image == ''
+                                ? src1
+                                : product.images[0]
+                                " class="mt-2" height="150px"></v-img>
+                        </v-avatar>
+                        <div>
+                            <v-card-text class="">
+                                <h3>{{ product.productname }}</h3>
+                            </v-card-text>
+
+                            <v-card-title class="text-h5 text-red">
+                                {{ product.groupprice }} DH
+                            </v-card-title>
+
+
+                            <v-card-subtitle>إبتداء من {{ product.groupquantity }} منتجات</v-card-subtitle>
                         </div>
-                    </v-btn>
-                </router-link>
+                    </div>
+                </v-card>
             </v-col>
         </v-row>
-    </v-card>
+    </div>
 </template>
   
 <script>
-import logo from "../assets/matjary_logo_g.png";
+import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
 import { useDisplay } from "vuetify";
+import Cookies from "js-cookie";
+
+import imagevoid from "../assets/void.png";
+import storevoid from "../assets/void_store.png";
+
+
+import ExtendHeader from "../components/ExtendHeader";
 
 export default {
     setup() {
         const { display } = useDisplay();
     },
 
+    components: {
+        ExtendHeader
+    },
+
     data() {
         return {
-            logo: logo,
+            src1: imagevoid,
+            src2: storevoid,
+            allproducts: '',
         };
     },
 
-    methods: {},
-    computed: {},
+    computed: {
+        ...mapGetters(["iscart", "getUserRole"]),
+    },
+
+    methods: {
+    },
+
+    created() {
+            axios
+            .get(`/product/getall`)
+            .then((response) => {
+                this.allproducts = response.data;
+            })
+            .catch((err) => { });
+    },
 };
 </script>
-<style lang="scss" scoped>
-@import "../scss/variables.scss";
-
-.hero {
-    background-image: linear-gradient(to bottom, rgb(255, 255, 255), rgb(155, 243, 201));
-    padding: 50px;
-    padding-top: 100px;
-    height: 100%;
+<style scoped>
+.homecontainer {
+    margin: auto;
+    padding: 20px;
 }
 
-.text-h3 {
-    line-height: 5rem;
-    font-family: $body-font-family !important;
-}
-
-.text-h4 {
-    line-height: 3rem;
-    font-family: $body-font-family !important;
-}
-
-.text-h5 {
-    font-family: $body-font-family !important;
-}
-
-.text-h6 {
-    font-family: $body-font-family !important;
-}
-
-.header-btn {
-    background-image: linear-gradient(to top right, rgb(68, 199, 116), rgb(68, 199, 116));
+.sold-out-badge {
+    background-color: red;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    position: absolute;
+    margin: 0.1rem;
+    top: 0;
+    right: 0;
 }
 </style>

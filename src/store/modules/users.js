@@ -2,8 +2,11 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 
+var base='https://matjaryapi.online'
+var localbase = 'http://127.0.0.1:8000'
+
 const axiosInstance = axios.create({
-    baseURL: 'https://matjaryapi.online',
+    baseURL: base,
 });
 
 const state = {
@@ -50,14 +53,14 @@ const actions = {
     loginUser(context, usercredentials) {
         return new Promise((resolve, reject) => {
             axiosInstance.post('/user/login', {
-                username: usercredentials.username,
+                phone: usercredentials.phone,
                 password: usercredentials.password,
             }
             )
                 .then(response => {
                     localStorage.setItem('accessToken', response.data.access_token);
                     localStorage.setItem('refreshToken', response.data.refresh_token);
-                    localStorage.setItem('user', JSON.stringify({ user_id: response.data.id, store_id: response.data.store_id, role: response.data.role }))
+                    localStorage.setItem('user', JSON.stringify({ user_id: response.data.id, store_id: response.data.store_id, role: response.data.role, storename: response.data.storename, }))
                     context.commit('setLoginUser', response.data);
                     resolve()
                 }).catch(err => {

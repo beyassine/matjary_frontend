@@ -2,71 +2,50 @@
   <v-toolbar class="breadcrumb">
     <v-row class="container d-flex justify-center align-center">
       <v-col cols="7">
-        <router-link
-          class="text-decoration-none text-grey-darken-3"
-          :to="{
-            name: 'cart',
-          }"
-        >
+        <router-link class="text-decoration-none text-grey-darken-3" :to="{
+          name: 'cart',
+        }">
           <v-badge v-if="iscart" color="error" dot>
             <v-icon class="ms-5" size="x-large">mdi-shopping-outline</v-icon>
           </v-badge>
-          <v-icon v-if="!iscart" class="ms-5" size="x-large"
-            >mdi-shopping-outline</v-icon
-          >
+          <v-icon v-if="!iscart" class="ms-5" size="x-large">mdi-shopping-outline</v-icon>
         </router-link>
       </v-col>
-      <v-col align="end" cols="5"> <h1 class="">المنتجات</h1></v-col>
+      <v-col align="end" cols="5">
+        <h1 class="">المنتجات</h1>
+      </v-col>
     </v-row>
   </v-toolbar>
   <div class="container">
     <v-row class="d-flex flex-row-reverse">
       <v-col v-if="allproducts.length == 0" cols="12">
-        <h3 class="text-center">قائمة المنتجات</h3></v-col
-      >
-      <v-col
-        v-for="(product, index) in allproducts"
-        :key="product.id"
-        :cols="$vuetify.display.smAndUp ? '4' : '12'"
-      >
+        <h3 class="text-center">قائمة المنتجات</h3>
+      </v-col>
+      <v-col v-for="(product, index) in allproducts" :key="product.id" :cols="$vuetify.display.smAndUp ? '4' : '12'">
         <v-card class="mx-auto" max-width="344">
-          <span v-if="product.quantity == '0'" class="sold-out-badge"><h2>إنتهت</h2></span>
-          <v-img
-            :src="
-              product.image == null || product.image == ''
-                ? src1
-                : product.image
-            "
-            class="mt-2"
-            height="150px"
-          ></v-img>
+          <span v-if="product.quantity == '0'" class="sold-out-badge">
+            <h2>إنتهت</h2>
+          </span>
+          <v-img :src="product.image == null || product.image == ''
+              ? src1
+              : product.image
+            " class="mt-2" height="150px"></v-img>
 
-          <v-card-title class="text-right"
-            ><h3>{{ product.productname }}</h3>
+          <v-card-title class="text-right">
+            <h3>{{ product.productname }}</h3>
           </v-card-title>
 
-          <v-card-subtitle class="text-right"
-            ><h3>السعر: {{ product.price }} د.م</h3></v-card-subtitle
-          >
-
+          <v-card-subtitle class="text-right">
+            <h3>السعر: {{ product.price }} د.م</h3>
+          </v-card-subtitle>
           <v-card-actions>
-            <v-btn
-              block
-              color="teal-lighten-1"
-              size="large"
-              type="submit"
-              variant="elevated"
-              class="text-h5 mt-3"
-              @click="
-                opendialog(
-                  product.id,
-                  product.productname,
-                  product.price,
-                  product.image
-                )
-              "
-              :disabled="product.quantity == '0'"
-            >
+            <v-btn block color="teal-lighten-1" size="large" type="submit" variant="elevated" class="text-h5 mt-3" @click="opendialog(
+                product.id,
+                product.productname,
+                product.price,
+                product.image
+              )
+              " :disabled="product.quantity == '0'">
               <h5 class="mt-2">
                 أضف إلى السلة
                 <v-icon class="ml-2 mb-2">mdi-shopping-outline</v-icon>
@@ -77,51 +56,23 @@
       </v-col>
     </v-row>
   </div>
-  <v-dialog
-    class="d-flex flex-row-reverse text-right"
-    max-width="600"
-    v-model="dialog"
-  >
+  <v-dialog class="d-flex flex-row-reverse text-right" max-width="600" v-model="dialog">
     <v-card>
-      <v-card-title
-        ><h3>{{ dialogname }}</h3></v-card-title
-      >
+      <v-card-title>
+        <h3>{{ dialogname }}</h3>
+      </v-card-title>
       <v-card-item>
         <h2 class="mb-3">الكمية</h2>
-        <v-text-field
-          append-inner-icon="mdi-layers-triple"
-          variant="outlined"
-          type="number"
-          reverse
-          v-model="dialogquantity"
-          :readonly="loading"
-          :rules="required"
-          compact
-        ></v-text-field>
+        <v-text-field append-inner-icon="mdi-layers-triple" variant="outlined" type="number" reverse
+          v-model="dialogquantity" :readonly="loading" :rules="required" compact></v-text-field>
       </v-card-item>
       <v-card-item>
         <h2 class="mb-3">ثمن البيع</h2>
-        <v-text-field
-          append-inner-icon="mdi-tag"
-          variant="outlined"
-          type="number"
-          reverse
-          v-model="dialogprice"
-          :readonly="loading"
-          :rules="validateprice"
-          compact
-        ></v-text-field>
+        <v-text-field append-inner-icon="mdi-tag" variant="outlined" type="number" reverse v-model="dialogprice"
+          :readonly="loading" :rules="validateprice" compact></v-text-field>
       </v-card-item>
-      <v-card-actions
-        ><v-btn
-          block
-          color="teal-lighten-1"
-          size="large"
-          type="submit"
-          variant="elevated"
-          class="text-h5 mt-1"
-          @click="addtocart()"
-        >
+      <v-card-actions><v-btn block color="teal-lighten-1" size="large" type="submit" variant="elevated"
+          class="text-h5 mt-1" @click="addtocart()">
           <h5 class="">تأكيد</h5>
         </v-btn>
       </v-card-actions>
@@ -231,7 +182,7 @@ export default {
         this.allproducts = response.data;
         this.logo = response.data.logo;
       })
-      .catch((err) => {});
+      .catch((err) => { });
   },
 };
 </script>
@@ -239,9 +190,11 @@ export default {
 .title-lg {
   width: 320px;
 }
+
 .title-sm {
   width: 220px;
 }
+
 .sold-out-badge {
   background-color: red;
   color: white;

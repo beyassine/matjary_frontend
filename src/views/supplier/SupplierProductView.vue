@@ -3,9 +3,9 @@
     <v-row class="d-flex justify-center align-center">
       <v-col cols="7">
         <router-link class="text-decoration-none" :to="{
-          name: 'addproduct',
+          name: 'supplieraddproducts',
         }">
-          <BtnLg title="منتج جديد" icon="mdi-plus" />
+          <BtnLg title="أضف منتج" icon="mdi-plus" />
         </router-link></v-col>
       <v-col align="end" cols="5">
         <h1 class="">المنتجات</h1>
@@ -17,48 +17,43 @@
       <v-col v-if="allproducts.length == 0" cols="12">
         <h3 class="text-center">لايوجد أي منتج</h3>
       </v-col>
-      <v-col v-for="(product, index) in allproducts" :key="product.id" :cols="$vuetify.display.mdAndUp ? '3' : '6'">
-        <v-card class="mx-auto ">
-          <v-img :src="product.image == null || product.image == ''
-              ? src1
-              : product.image
-            " class="mt-2" height="150px"></v-img>
-            
-          <v-card-text  class="text-right text-grey-darken-1 ">
-            <h3 >{{ product.productname }} {{ product.productname }} </h3>
-          </v-card-text>
-
-          <v-card-title class="text-right ">
-            <h5>{{ product.price }} DH : الثمن</h5>
-            <h5 class="mt-2s">الكمية المتوفرة: {{ product.quantity }} </h5>
-          </v-card-title>
-
-          <v-card-actions class="d-flex justify-center">
-            <v-col cols="12">
-              <router-link class="text-decoration-none" :to="{
-                name: 'editproduct',
+      <v-col v-for="(product, index) in allproducts" :key="product.id" :cols="$vuetify.display.mdAndUp ? '4' : '12'">
+        <v-card class="mx-auto " :to="{
+                name: 'productdetail',
                 params: { productId: product.id },
               }">
-                <v-btn block color="green-lighten-1" size="large" type="submit" variant="elevated" class="text-h5">
-                  <h5 class="mt-2">
-                    تعديل
-                    <v-icon class="ml-2 mb-2">mdi-pencil-outline</v-icon>
-                  </h5>
-                </v-btn>
-              </router-link>
-            </v-col>
-          </v-card-actions>
+          <div class="d-flex flex-no-wrap justify-space-between">
+
+            <v-avatar class="ma-3" size="125" rounded="0">
+              <v-img :src="product.images == null || product.image == ''
+                ? src1
+                : product.images[0]
+                " class="mt-2" height="150px"></v-img>
+            </v-avatar>
+            <div>
+              <v-card-text class="">
+                <h3>{{ product.productname }}</h3>
+              </v-card-text>
+
+              <v-card-title class="text-h5 text-red">
+                {{ product.groupprice }} DH
+              </v-card-title>
+
+              
+              <v-card-subtitle>إبتداء من {{ product.groupquantity }} منتجات</v-card-subtitle>
+            </div>
+          </div>
         </v-card>
       </v-col>
     </v-row>
   </div>
 </template>
-
+  
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { useDisplay } from "vuetify";
 
-import imagevoid from "../assets/void.png";
+import imagevoid from "../../assets/void.png";
 
 import BtnXlg from "@/components/BtnXlg";
 import BtnLg from "@/components/BtnLg";
@@ -112,3 +107,4 @@ export default {
   right: 0;
 }
 </style>
+  

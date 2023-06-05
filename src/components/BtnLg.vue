@@ -1,8 +1,9 @@
 <template>
     <v-btn
-      class="font-weight text-white ml-2 main-btn"
+      class="font-weight text-white ml-2"
       size="large"
       rounded="pill" 
+      color="green-lighten-1"
     > <h4>
       {{ title }} <v-icon class="ml-1">{{ icon }}</v-icon>
     </h4>
@@ -25,7 +26,4 @@ export default {
 };
 </script>
 <style scoped>
-.main-btn{
-  background-image: linear-gradient(to top left, rgba(18, 140, 126,.8), rgba(18, 140, 126,.8));
-}
 </style>

@@ -19,7 +19,7 @@
         >
       </router-link>
       <router-link
-        v-if="this.getUserRole == 'provider'"
+        v-if="this.getUserRole == 'supplier'"
         v-for="[icon, title, route] in adminlinks"
         :key="title"
         class="text-decoration-none text-black text-right"
@@ -37,7 +37,7 @@
         <v-btn
           color="red-lighten-1"
           variant="elevated"
-          class="ext-white"
+          class="text-white"
           block
           @click="logout"
         >

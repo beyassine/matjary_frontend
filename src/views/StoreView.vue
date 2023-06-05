@@ -1,121 +1,108 @@
 <template>
-  <v-breadcrumbs class="breadcrumb">
-    <v-row class="d-flex justify-center align-center">
-      <v-col cols="7"></v-col>
-      <v-col align="end" cols="5"> <h1 class="mb-1 mt-1">المنتجات</h1></v-col>
+  <ExtendHeader />
+  <v-toolbar class="storebar mt-5 border bg-white d-flex justify-center align-center">
+    <v-row class="container d-flex justify-center align-center">
+      <v-col cols="5">
+        <router-link class="text-decoration-none text-grey-darken-3" :to="{
+          name: 'cart',
+        }">
+          <v-badge v-if="iscart" color="error" dot>
+            <v-icon class="ms-5" size="x-large">mdi-shopping-outline</v-icon>
+          </v-badge>
+          <v-icon v-if="!iscart" class="ms-5" size="x-large">mdi-shopping-outline</v-icon>
+        </router-link>
+      </v-col>
+      <v-col align="end" cols="7">
+        <h1 class="">
+          المنتجات
+          <v-avatar class="ml-2" size="70">
+            <v-img :src="src2"></v-img>
+          </v-avatar>
+        </h1>
+      </v-col>
     </v-row>
-  </v-breadcrumbs>
-  <div class="container">
-    <v-row class="d-flex flex-row-reverse">
-      <v-col v-if="allproducts.length == 0" cols="12">
-        <h3 class="text-center">لايوجد أي منتج</h3></v-col
-      >
-      <v-col
-        v-for="(product, index) in allproducts"
-        :key="product.id"
-        :cols="$vuetify.display.mdAndUp ? '4' : '12'"
-      >
-        <v-card class="mx-auto" max-width="344">
-          <v-img
-            :src="
-              product.image == null || product.image == ''
-                ? src1
-                : product.image
-            "
-            class="mt-2"
-            height="150px"
-          ></v-img>
+  </v-toolbar>
+  <div>
+    <v-row style="padding: 20px;">
+      <v-col class="row-container" cols="9">
+        <v-row class="d-flex flex-row-reverse">
+          <v-col v-if="allproducts.length == 0" cols="12">
+            <h3 class="text-center">قائمة المنتجات</h3>
+          </v-col>
+          <v-col v-for="(product, index) in allproducts" :key="product.id" :cols="$vuetify.display.smAndUp ? '3' : '6'">
+            <v-card elevation="0" class="mx-auto border" max-width="250">
+              <v-img :src="product.image == null || product.image == ''
+                  ? src1
+                  : product.image
+                " class="mt-2" height="180px">
+              </v-img>
 
-          <v-card-title class="text-right"
-            ><h3>{{ product.productname }}</h3>
-          </v-card-title>
+              <v-card-title class="text-right ">
+                <v-chip v-if="product.quantity == '0'" color="red" text-color="white">
+                  إنتهت
+                </v-chip>
+                <v-chip v-if="product.quantity != '0'" color="green" text-color="white">
+                  متوفر
+                </v-chip>
+              </v-card-title>
 
-          <v-card-subtitle class="text-right"
-            ><h3>السعر: {{ product.price }} د.م</h3></v-card-subtitle
-          >
+              <v-card-text class="text-right text-grey-darken-1 overflow-hidden ">
+                <h3 class="text-grey-darken-1"> {{ product.productname }}</h3>
+              </v-card-text>
 
-          <v-card-actions>
-            <v-btn
-              block
-              color="teal-lighten-1"
-              size="large"
-              type="submit"
-              variant="elevated"
-              class="text-h5 mt-3"
-              @click="
-                opendialog(product.id, product.productname, product.price,product.image)
-              "
-            >
-              <h5 class="mt-2">
-                أضف إلى السلة
-                <v-icon class="ml-2 mb-2">mdi-shopping-outline</v-icon>
-              </h5>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+              <v-card-title class="text-right ">
+                <h5 class="mt-1"> {{ product.price }} DH</h5>
+              </v-card-title>
+
+              <v-card-actions>
+                <v-btn block color="green-lighten-1" size="large" type="submit" variant="elevated" class="text-h5 "
+                  @click="opendialog(
+                      product.id,
+                      product.productname,
+                      product.price,
+                      product.image
+                    )
+                    " :disabled="product.quantity == '0'">
+                  <h5 class="mt-2">
+                    أضف إلى السلة
+                    <v-icon class="ml-2 mb-2">mdi-shopping-outline</v-icon>
+                  </h5>
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="3">
+        <v-col cols="12">
+          <h3 class="text-center">قائمة المنتجات</h3>
+        </v-col>
       </v-col>
     </v-row>
   </div>
-  <v-dialog
-    class="d-flex flex-row-reverse text-right"
-    max-width="600"
-    v-model="dialog"
-  >
+  <v-dialog class="d-flex flex-row-reverse text-right" max-width="600" v-model="dialog">
     <v-card>
-      <v-card-title
-        ><h3>{{ dialogname }}</h3></v-card-title
-      >
+      <v-card-title>
+        <h3>{{ dialogname }}</h3>
+      </v-card-title>
       <v-card-item>
         <h2 class="mb-3">الكمية</h2>
-        <v-text-field
-          append-inner-icon="mdi-layers-triple"
-          variant="outlined"
-          type="number"
-          reverse
-          v-model="dialogquantity"
-          :readonly="loading"
-          :rules="required"
-          compact
-        ></v-text-field>
+        <v-text-field append-inner-icon="mdi-layers-triple" variant="outlined" type="number" reverse
+          v-model="dialogquantity" :readonly="loading" :rules="required" compact></v-text-field>
       </v-card-item>
       <v-card-item>
-        <h2 class="mb-3">ثمن البيع  </h2>
-        <v-text-field
-          append-inner-icon="mdi-tag"
-          variant="outlined"
-          type="number"
-          reverse
-          v-model="dialogprice"
-          :readonly="loading"
-          :rules="validateprice"
-          compact
-        ></v-text-field>
+        <h2 class="mb-3">ثمن البيع</h2>
+        <v-text-field append-inner-icon="mdi-tag" variant="outlined" type="number" reverse v-model="dialogprice"
+          :readonly="loading" :rules="validateprice" compact></v-text-field>
       </v-card-item>
-      <v-card-actions
-        ><v-btn
-          block
-          color="teal-lighten-1"
-          size="large"
-          type="submit"
-          variant="elevated"
-          class="text-h5 mt-1"
-          @click="addtocart()"
-        >
-          <h5 class="">
-            تأكيد 
-          </h5>
+      <v-card-actions><v-btn block color="teal-lighten-1" size="large" type="submit" variant="elevated"
+          class="text-h5 mt-1" @click="addtocart()">
+          <h5 class="">تأكيد</h5>
         </v-btn>
       </v-card-actions>
       <v-card-actions>
-        <v-btn
-          block
-          size="large"
-          class="text-h5 mt-1"
-          @click="dialog = false"
-        >
-          <h5 class="">
-            تراجع
-          </h5>
+        <v-btn block size="large" class="text-h5 mt-1" @click="dialog = false">
+          <h5 class="">تراجع</h5>
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -123,17 +110,16 @@
 </template>
 
 <script>
-import axios from "axios";
+import axiosInstance from "../axios/axiosInstance";
+import { mapGetters, mapActions } from "vuex";
 import { useDisplay } from "vuetify";
 import Cookies from "js-cookie";
 
 import imagevoid from "../assets/void.png";
 import storevoid from "../assets/void_store.png";
 
-import BtnXlg from "@/components/BtnXlg";
-import BtnLg from "@/components/BtnLg";
-import FilterCategories from "@/components/FilterCategories";
-import CategorieFilter from "@/components/CategorieFilter";
+import ExtendHeader from "../components/ExtendHeader";
+
 
 export default {
   setup() {
@@ -141,15 +127,11 @@ export default {
   },
 
   components: {
-    BtnXlg,
-    BtnLg,
-    FilterCategories,
-    CategorieFilter,
+    ExtendHeader
   },
 
   data() {
     return {
-      storeId: this.$route.params.storeId,
       src1: imagevoid,
       src2: storevoid,
       logo: "",
@@ -159,68 +141,88 @@ export default {
       //dialog
       dialogid: "",
       dialogname: "",
-      dialogimg:'',
+      dialogimg: "",
       dialog: false,
       //form
-      dialoid:'',
+      dialoid: "",
       dialogquantity: 1,
       dialogprice: "",
       price: "",
       loading: false,
       required: [(v) => !!v || "لا يجوز أن يُترَك هذا الحقل فارغًا"],
-      validateprice:[
+      validateprice: [
         (v) => !!v || "لا يجوز أن يُترَك هذا الحقل فارغًا",
-        (v) => parseFloat(v) >= parseFloat(this.price) || 'سعر بيع المنتج يجب أن يكون أكبر من أو يساوي السعر الأصلي',
+        (v) =>
+          parseFloat(v) >= parseFloat(this.price) ||
+          "سعر بيع المنتج يجب أن يكون أكبر من أو يساوي السعر الأصلي",
       ],
+      // cart
     };
   },
 
-  computed: {},
+  computed: {
+    ...mapGetters(["iscart", "getUserRole"]),
+  },
 
   methods: {
-    opendialog(id, name, price,img) {
+    ...mapActions(["setiscart"]),
+    opendialog(id, name, price, img) {
       this.dialogid = id;
       this.dialogname = name;
       this.dialog = true;
       this.dialogprice = price;
-      this.dialogquantity=1;
-      this.price=price;
-      this.dialogimg=img;
+      this.dialogquantity = 1;
+      this.price = price;
+      this.dialogimg = img;
     },
-    addtocart(){
+    addtocart() {
       var cart = JSON.parse(Cookies.get("cart"));
       if (cart[this.dialogid] == undefined) {
         cart[this.dialogid] = {
+          id: this.dialogid,
           name: this.dialogname,
           price: this.dialogprice,
-          originalprice:this.price,
-          quantity: this.dialogquantity ,
-          img:this.dialogimg,
-          total_product: parseFloat(this.dialogprice)*parseFloat(this.dialogquantity),
+          originalprice: this.price,
+          quantity: this.dialogquantity,
+          img: this.dialogimg,
+          total_product:
+            parseFloat(this.dialogprice) * parseFloat(this.dialogquantity),
         };
         Cookies.set("cart", JSON.stringify(cart));
-        this.dialog=false
+        this.setiscart();
+        this.dialog = false;
+      } else {
+        cart[this.dialogid].quantity = this.dialogquantity;
+        cart[this.dialogid].price = this.dialogprice;
+        cart[this.dialogid].total_product =
+          parseFloat(this.dialogprice) * parseFloat(this.dialogquantity);
+        Cookies.set("cart", JSON.stringify(cart));
+        this.dialog = false;
       }
-      
-    }
+    },
   },
 
   created() {
-    axios
-      .get(`/store/${this.storeId}`)
+    axiosInstance
+      .get(`/product/getall`)
       .then((response) => {
-        this.allproducts = response.data.products;
+        this.allproducts = response.data;
         this.logo = response.data.logo;
       })
-      .catch((err) => {});
+      .catch((err) => { });
   },
 };
 </script>
 <style scoped>
-.title-lg {
-  width: 320px;
+.storebar {
+  height: 100px;
+  padding: 20px;
+
 }
-.title-sm {
-  width: 220px;
+
+.horizontal-space {
+  height: 20px;
+  background-color: rgb(239, 239, 239);
+  width: 100%;
 }
 </style>
