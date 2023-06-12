@@ -16,6 +16,7 @@
     "jwt-decode": "^3.1.2",
     "libphonenumber-js": "^1.10.18",
     "mitt": "^3.0.0",
+    "pusher-js": "^8.0.2",
     "sass": "^1.57.1",
     "sass-loader": "^13.2.0",
     "vue": "^3.2.13",

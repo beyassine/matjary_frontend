@@ -17,7 +17,7 @@
               </v-avatar>
             </v-col>
           </v-row>
-          <h2>{{ product.productname }}</h2>
+          <h2 class="mt-5">{{ product.productname }}</h2>
         </v-card-text>
         <v-row>
           <v-col cols="12">
@@ -27,6 +27,13 @@
             <v-img v-if="image !== ''" height="80px" :src="image" @click="selectImage(index)" />
           </v-col>
         </v-row>
+        <v-card-text>
+          <ul>
+            <li v-for="message in messages">
+              {{ message }}
+            </li>
+          </ul>
+        </v-card-text>
         <v-card-text class="mt-3 text-right">
           <v-chip size="large" class="mb-3" :color="getstatus('registred').color">
             {{ getstatus('registred').text }}
@@ -43,9 +50,9 @@
           </h3>
           <h3 v-if="!stillTime" class="text-red mt-3">الوقت المتبقي : إنتهى
           </h3>
-          <h3 class="mt-2"> {{ product.groupquantity }} : عدد المشترين المطلوب <v-icon
+          <h3 class="mt-2" v-if="product.groupquantity >0 "> {{ product.groupquantity }} : عدد المشترين المطلوب <v-icon
               class="ml-2">mdi-check-circle-outline</v-icon></h3>
-          <h3 class="mt-2"> {{ buyers_count }} : عدد المشترين الحالي <v-icon class="ml-2">mdi-account-group</v-icon></h3>
+          <h3 class="mt-2"  v-if="product.groupquantity >0 "> {{ buyers_count }} : عدد المشترين الحالي <v-icon class="ml-2">mdi-account-group</v-icon></h3>
         </v-card-text>
       </v-col>
       <v-col class="bg-white" :cols="$vuetify.display.smAndUp ? '6' : '12'">
@@ -120,6 +127,7 @@
 </template>
   
 <script>
+import Pusher from 'pusher-js'
 import axios from "axios";
 import { mapGetters, mapActions } from "vuex";
 import { useDisplay } from "vuetify";
@@ -142,6 +150,7 @@ export default {
 
   data() {
     return {
+      messages: [],
       productId: this.$route.params.productId,
       src1: imagevoid,
       src2: storevoid,
@@ -316,11 +325,24 @@ export default {
         .post(`/product/addbuyer/${this.product.store_id}/${this.product.id}`, fd)
         .then((response) => {
           if (response.status === 200) {
-            this.loading=false
+            this.loading = false
           }
         });
 
     },
+  },
+  mounted() {
+    Pusher.logToConsole = true;
+
+    const pusher = new Pusher('84dc426d70ef51cb7ac0', {
+      cluster: 'eu'
+    });
+
+    const channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function (data) {
+      app.messages.push(JSON.stringify(data));
+    });
+
   },
 
   created() {
