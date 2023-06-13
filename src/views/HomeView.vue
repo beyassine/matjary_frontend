@@ -7,26 +7,38 @@
                     name: 'productdetail',
                     params: { productId: product.id },
                 }">
-                    <div class="d-flex flex-no-wrap justify-space-between">
-
-                        <v-avatar class="ma-3" size="125" rounded="0">
+                    <v-row align="center" class="spacer mt-2 mb-2" no-gutters>
+                        <v-col cols="10">
+                            <h4 class="mr-2 text-medium-emphasis text-right">{{ product.publisher }}</h4>
+                        </v-col>
+                        <v-col cols="2">
+                            <v-avatar size="40">
+                                <v-img :src="product.publisher_logo == null || product.publisher_logo == ''
+                                    ? src1
+                                    : product.publisher_logo
+                                    "></v-img>
+                            </v-avatar>
+                        </v-col>
+                    </v-row>
+                    <div class="d-flex justify-end ">
+                        <div>
+                            <v-card-text class="text-right">
+                                <h3>{{ product.productname }}</h3>
+                            </v-card-text>
+                            <p class="text-right">
+                                <span class="text-decoration-line-through text-h6 text-grey">{{ product.unitprice }} DH</span> <span
+                                    class="text-h5 text-green ml-2"> {{ product.groupprice }} DH</span>
+                            </p>
+                            <p class="text-right text-black mt-1" v-if="product.freeshipping">
+                                شحن مجاني  <v-icon class="ml-2" icon="mdi-truck-outline" ></v-icon>
+                            </p>
+                        </div>
+                        <v-avatar class="ma-3" size="100" rounded="0">
                             <v-img :src="product.images == null || product.image == ''
                                 ? src1
                                 : product.images[0]
-                                " class="mt-2" height="150px"></v-img>
+                                " class="mt-2" height="100px"></v-img>
                         </v-avatar>
-                        <div>
-                            <v-card-text class="">
-                                <h3>{{ product.productname }}</h3>
-                            </v-card-text>
-
-                            <v-card-title class="text-h5 text-red">
-                                {{ product.groupprice }} DH
-                            </v-card-title>
-
-
-                            <v-card-subtitle>إبتداء من {{ product.groupquantity }} منتجات</v-card-subtitle>
-                        </div>
                     </div>
                 </v-card>
             </v-col>
@@ -71,7 +83,7 @@ export default {
     },
 
     created() {
-            axios
+        axios
             .get(`/product/getall`)
             .then((response) => {
                 this.allproducts = response.data;

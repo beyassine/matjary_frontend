@@ -34,7 +34,9 @@ import router from './router'
 
 // axios
 import axios from 'axios'
-axios.defaults.baseURL = 'https://matjaryapi.online'
+//https://matjaryapi.online
+//http://127.0.0.1:8000
+axios.defaults.baseURL = 'http://127.0.0.1:8000'
 
 // Vuex Store
 import store from './store';

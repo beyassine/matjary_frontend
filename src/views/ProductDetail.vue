@@ -10,7 +10,7 @@
             </v-col>
             <v-col cols="2">
               <v-avatar size="60">
-                <v-img :src="this.product.publisher_logo == null || product.publisher_logo == ''
+                <v-img :src="this.product.publisher_logo == null || this.product.publisher_logo == ''
                   ? src1
                   : this.product.publisher_logo
                   "></v-img>
@@ -45,14 +45,18 @@
             <span class="text-decoration-line-through text-h6">{{ product.unitprice }} DH</span> <span
               class="text-h4 text-green ml-2"> {{ product.groupprice }} DH</span>
           </p>
+          <p class="text-right text-black mt-3" v-if="product.freeshipping">
+            شحن مجاني <v-icon class="ml-2" icon="mdi-truck-outline"></v-icon>
+          </p>
           <h3 v-if="stillTime" class="text-red mt-3">الوقت المتبقي : {{ remainingDays }} أيام {{ remainingHours }} ساعة {{
             remainingMinutes }} دقيقة
           </h3>
           <h3 v-if="!stillTime" class="text-red mt-3">الوقت المتبقي : إنتهى
           </h3>
-          <h3 class="mt-2" v-if="product.groupquantity >0 "> {{ product.groupquantity }} : عدد المشترين المطلوب <v-icon
+          <h3 class="mt-2" v-if="product.groupquantity > 0"> {{ product.groupquantity }} : عدد المشترين المطلوب <v-icon
               class="ml-2">mdi-check-circle-outline</v-icon></h3>
-          <h3 class="mt-2"  v-if="product.groupquantity >0 "> {{ buyers_count }} : عدد المشترين الحالي <v-icon class="ml-2">mdi-account-group</v-icon></h3>
+          <h3 class="mt-2" v-if="product.groupquantity > 0"> {{ buyers_count }} : عدد المشترين الحالي <v-icon
+              class="ml-2">mdi-account-group</v-icon></h3>
         </v-card-text>
       </v-col>
       <v-col class="bg-white" :cols="$vuetify.display.smAndUp ? '6' : '12'">
@@ -123,6 +127,27 @@
         </v-form>
       </v-col>
     </v-row>
+  </div>
+  <div class="text-center">
+    <v-dialog v-model="dialog" width="auto" class="dialog">
+      <v-card>
+        <v-card-text class="d-flex justify-center">
+          <v-icon color="success" icon="mdi-check-circle-outline" size="x-large"></v-icon>
+        </v-card-text>
+        <v-card-text>
+          <h3>لقد تم إضافة طلبكم بنجاح</h3>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-center">
+          <router-link class="text-decoration-none text-center" :to="{
+            name: 'home',
+          }">
+            <v-btn color="info" block @click="dialog = false">
+              <h5> القائمة الرئيسية <v-icon color="info" icon="mdi-keyboard-return"></v-icon></h5>
+            </v-btn>
+          </router-link>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
   
@@ -236,6 +261,11 @@ export default {
       if (this.selectedcity == '') {
         return 0
       }
+
+      if (this.product.freeshipping){
+        return 0
+      }
+      
       return this.selectedcity['cost']
     },
     shipcity: function () {
@@ -326,22 +356,23 @@ export default {
         .then((response) => {
           if (response.status === 200) {
             this.loading = false
+            this.dialog = true
           }
         });
 
     },
   },
   mounted() {
-    Pusher.logToConsole = true;
+    //Pusher.logToConsole = true;
 
-    const pusher = new Pusher('84dc426d70ef51cb7ac0', {
-      cluster: 'eu'
-    });
+    //const pusher = new Pusher('84dc426d70ef51cb7ac0', {
+    //cluster: 'eu'
+    //});
 
-    const channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function (data) {
-      app.messages.push(JSON.stringify(data));
-    });
+    //const channel = pusher.subscribe('my-channel');
+    //channel.bind('my-event', function (data) {
+    //app.messages.push(JSON.stringify(data));
+    //});
 
   },
 

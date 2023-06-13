@@ -122,10 +122,9 @@
                   <v-img class="d-flex" @click="() => {
                     this.$refs.image_logo.click();
                   }
-                    " :src="publisher_logo == null ||publisher_logo == '' ? imgvoid : publisher_logo" contain>
+                    " :src="publisher_logo == null || publisher_logo == '' ? imgvoid : publisher_logo" contain>
                   </v-img>
-                  <input ref="image_logo" class="d-none" type="file" accept="image/*" label=""
-                    @change="uploadLogo()" />
+                  <input ref="image_logo" class="d-none" type="file" accept="image/*" label="" @change="uploadLogo()" />
                 </v-avatar>
               </v-card-item>
               <v-card-item class="">
@@ -152,6 +151,11 @@
                 <h3 class="mb-3">الكمية المطلوبة</h3>
                 <v-text-field append-inner-icon="mdi-layers-triple" placeholder="0" variant="outlined" type="number"
                   reverse v-model="groupquantity" :readonly="loading" :rules="required"></v-text-field>
+              </v-card-item>
+              <v-card-item class="">
+                <h3 class="mb-3">الشحن مجاني</h3>
+                <v-switch  color="primary" v-model="freeshipping" hide-details true-value="true" false-value="false"
+                  :label="`Free Shipping: ${freeshipping}`"></v-switch>
               </v-card-item>
               <v-card-actions>
                 <v-btn :disabled="!form" :loading="loading" block color="teal-darken-1" size="large" type="submit"
@@ -206,6 +210,7 @@ export default {
       img_changes: [false, false, false, false],
       img_uploading: [false, false, false, false],
       // Shipping
+      freeshipping:false,
       shipping: [
         { city: "الدار البيضاء", cost: "20" },
         { city: "الرباط", cost: "40" },
@@ -245,7 +250,7 @@ export default {
         console.error(error);
       }
     },
-    async uploadLogo(){
+    async uploadLogo() {
       var img_data = this.$refs['image_logo'].files[0];
       // get signed url from s3
       const url = await this.getUrl()
@@ -259,7 +264,7 @@ export default {
       })
       // show image 
       const img_url = url.split('?')[0]
-      this.publisher_logo=img_url
+      this.publisher_logo = img_url
     },
     async uploadImage(e, index) {
       this.img_uploading.splice(index, 1, true)
@@ -294,10 +299,11 @@ export default {
         groupquantity: parseInt(this.groupquantity),
         illimited: false,
         images: this.images,
+        freeshipping:this.freeshipping,
         shipping: this.shipping,
         publisher: this.publisher,
         publisher_logo: this.publisher_logo,
-        datelimit:new Date().getTime() + 7 * 24 * 60 * 60 * 1000, // Current time + 7 days in milliseconds
+        datelimit: new Date().getTime() + 7 * 24 * 60 * 60 * 1000, // Current time + 7 days in milliseconds
       };
       this.loading = true;
       axiosInstance.post(`/product/create`, fd).then((response) => {
