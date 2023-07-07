@@ -8,20 +8,6 @@
   >
     <v-list density="compact" class="mt-2" nav>
       <router-link
-        v-if="this.getUserRole == 'seller'"
-        v-for="[icon, title, route] in links"
-        :key="title"
-        class="text-decoration-none text-black text-right"
-        :to="{
-          name: route,
-        }"
-      >
-        <v-list-item class="mb-2" :append-icon="icon">
-          <h3>{{ title }}</h3></v-list-item
-        >
-      </router-link>
-      <router-link
-        v-if="this.getUserRole == 'provider'"
         v-for="[icon, title, route] in adminlinks"
         :key="title"
         class="text-decoration-none text-black text-right"
@@ -52,14 +38,10 @@ export default {
   data() {
     return {
       storeId: this.$route.params.storeId,
-      links: [
-        ["mdi-package-variant-closed", "المنتجات", "products"],
-        ["mdi-clipboard-text-outline", "الطلبات", "orders"],
-      ],
       adminlinks: [
         ["mdi-package-variant-closed", "المنتجات", "adminproducts"],
         ["mdi-clipboard-text-outline", "الطلبات", "adminorders"],
-        ["mdi-account-multiple-outline", "العملاء", "adminsellers"],
+        ["mdi-cog-outline", "الإعدادات", "adminsettings"],
       ],
       isOpen: false,
     };

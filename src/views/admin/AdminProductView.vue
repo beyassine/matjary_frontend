@@ -3,12 +3,12 @@
     <v-row class="d-flex justify-center align-center">
       <v-col cols="7">
         <router-link class="text-decoration-none" :to="{
-          name: 'supplieraddproducts',
+          name: 'adminaddproducts',
         }">
           <BtnLg title="أضف منتج" icon="mdi-plus" />
         </router-link></v-col>
       <v-col align="end" cols="5">
-        <h1 class="">المنتجات</h1>
+        <h2 class="">المنتجات</h2>
       </v-col>
     </v-row>
   </v-breadcrumbs>
@@ -18,31 +18,43 @@
         <h3 class="text-center">لايوجد أي منتج</h3>
       </v-col>
       <v-col v-for="(product, index) in allproducts" :key="product.id" :cols="$vuetify.display.mdAndUp ? '4' : '12'">
-        <v-card class="mx-auto " :to="{
-                name: 'productdetail',
-                params: { productId: product.id },
-              }">
-          <div class="d-flex flex-no-wrap justify-space-between">
 
-            <v-avatar class="ma-3" size="125" rounded="0">
-              <v-img :src="product.images == null || product.image == ''
-                ? src1
-                : product.images[0]
-                " class="mt-2" height="150px"></v-img>
-            </v-avatar>
-            <div>
-              <v-card-text class="">
-                <h3>{{ product.productname }}</h3>
-              </v-card-text>
+        <v-card class="mx-auto" max-width="344">
+          <v-img class="mt-2 mb-2" :src="product.images == null || product.image == ''
+            ? src1
+            : product.images[0]" height="200px"></v-img>
 
-              <v-card-title class="text-h5 text-red">
-                {{ product.groupprice }} DH
-              </v-card-title>
+          <v-card-title class="text-right">
+            <h4>{{ product.productname }}</h4>
+          </v-card-title>
 
-              
-              <v-card-subtitle>إبتداء من {{ product.groupquantity }} منتجات</v-card-subtitle>
-            </div>
-          </div>
+          <v-card-title class="text-right">
+            <h3> د.م <span>{{ product.unitprice }}</span></h3>
+          </v-card-title>
+          <router-link class="text-decoration-none" :to="{
+              name: 'productdetail',
+              params: { productId: product.id },
+            }">
+          <v-card-actions>
+            
+              <v-btn block color="blue-lighten-1" size="large" type="submit" variant="elevated"
+                class="text-h5 text-white mt-3">
+                رؤية المنتج
+                <v-icon class="ml-3">mdi-eye-outline</v-icon>
+              </v-btn>
+          </v-card-actions>
+            </router-link>
+            <router-link class="text-decoration-none" :to="{
+              name: 'admineditproducts',
+              params: { productId: product.id },
+            }">
+          <v-card-actions>
+              <v-btn block color="blue-grey" size="large" type="submit" variant="elevated" class="text-h5">
+                تعديل المنتج
+                <v-icon class="ml-3">mdi-pencil-outline</v-icon>
+              </v-btn>
+          </v-card-actions>
+            </router-link>
         </v-card>
       </v-col>
     </v-row>

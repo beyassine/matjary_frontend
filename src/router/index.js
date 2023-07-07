@@ -5,46 +5,43 @@ import { createRouter, createWebHistory } from 'vue-router'
 import SignupView from '../views/SignupView.vue'
 import LoginView from '../views/LoginView.vue'
 import NotFound from '../views/404.vue'
+import HomeView from '../views/HomeView.vue'
+
 
 // Store
-import HomeView from '../views/HomeView.vue'
-import ProductDetail from '../views/ProductDetail.vue'
-import GroupDetail from '../views/GroupDetail.vue'
+import StoreDetail from '../views/store/StoreDetailView.vue'
+import ProductDetail from '../views/store/ProductDetailView.vue'
 
-// Seller
-import SellerSignupView from '../views/seller/SellerSignupView.vue'
-import ProductView from '../views/ProductView.vue'
-import CartView from '../views/CartView.vue'
-import OrderView from '../views/OrderView.vue'
-import ListOrderView from '../views/ListOrderView.vue'
-import EditOrderView from '../views/EditOrderView.vue'
+//Admin
 
-//Supplier
-import SupplierSignupView from '../views/supplier/SupplierSignupView.vue'
-import SupplierProductView from '../views/supplier/SupplierProductView.vue'
-import SupplierAddproductView from '../views/supplier/SupplierAddproductView.vue'
-
-
-//supplier
-import AdminProductView from '../views/AdminProductView.vue'
-import AddProductView from '../views/AddProductView.vue'
-import EditProductView from '../views/EditProductView.vue'
-import AdminOrderView from '../views/AdminOrderView.vue'
-import AdminEditOrderView from '../views/AdminEditOrderView.vue'
-import AdminSellerView from '../views/AdminSellerView.vue'
+///Product
+import AdminProductView from '../views/admin/AdminProductView.vue'
+import AdminProductAddView from '../views/admin/AdminProductAddView.vue'
+import AdminProductEditView from '../views/admin/AdminProductEditView.vue'
+///Order
+import AdminOrderView from '../views/admin/AdminOrderView.vue'
+///Settings
+import AdminStoreSettingsView from '../views/admin/AdminStoreSettingsView.vue'
+import AdminStoreShippingView from '../views/admin/AdminStoreShippingView.vue'
 
 
 const routes = [
   {
+    path: '',
+    name: 'home',
+    meta: { extend: true, white: true },
+    component: HomeView
+  },
+  {
     path: '/signup',
     name: 'signup',
-    meta: { extend: true },
+    meta: { extend: true, white: true },
     component: SignupView
   },
   {
     path: '/login',
     name: 'login',
-    meta: { extend: true },
+    meta: { extend: true, white: true },
     component: LoginView
   },
   {
@@ -55,130 +52,63 @@ const routes = [
   },
 
   //Store
-  
   {
-    path: '',
-    name: 'home',
-    meta: { extend: true },
-    component: HomeView
-  },  
+    path: '/:storeId',
+    name: 'storedetail',
+    meta: { extend: true, requiresAuth: false },
+    component: StoreDetail
+  },
   {
     path: '/product/:productId',
     name: 'productdetail',
-    meta: { extend: true, requiresAuth: false},
+    meta: { extend: true, requiresAuth: false },
     component: ProductDetail
-  },  
-  {
-    path: '/groups/:groupId',
-    name: 'groupdetail',
-    meta: { extend: true, requiresAuth: false},
-    component: GroupDetail
-  },
-  
-  //seller
-  {
-    path: '/seller/signup',
-    name: 'sellersignup',
-    meta: { extend: true },
-    component: SellerSignupView
-  },
-  
-  {
-    path: '/cart',
-    name: 'cart',
-    meta: { nextend: false, requiresAuth: true },
-    component: CartView
-  },
-  {
-    path: '/orders',
-    name: 'orders',
-    meta: { extend: false, requiresAuth: true, seller: true },
-    component: OrderView
-  },
-  {
-    path: '/listorders',
-    name: 'listorders',
-    meta: { extend: false, requiresAuth: true, seller: true },
-    component: ListOrderView
-  },
-  {
-    path: '/orders/:orderId/edit',
-    name: 'editorder',
-    meta: { extend: false, requiresAuth: true, seller: true },
-    component: EditOrderView
   },
 
-  // Supplier  
-  {
-    path: '/supplier/signup',
-    name: 'suplliersignup',
-    meta: { extend: true },
-    component: SupplierSignupView
-  },  
-  {
-    path: '/supplier/products',
-    name: 'supplierproducts',
-    meta: { extend: false, requiresAuth: true, supplier: true },
-    component: SupplierProductView
-  },
-  {
-    path: '/supplier/products/new',
-    name: 'supplieraddproducts',
-    meta: { extend: false, requiresAuth: true, supplier: true },
-    component: SupplierAddproductView
-  },
+  // Admin   
 
-  // provider  
+  /// Products
   {
-    path: '/provider/products',
+    path: '/admin/products',
     name: 'adminproducts',
-    meta: { extend: false, requiresAuth: true, supplier: true },
+    meta: { extend: false, requiresAuth: true },
     component: AdminProductView
   },
   {
-    path: '/provider/products/add',
-    name: 'addproduct',
-    meta: { extend: false, requiresAuth: true, supplier: true  },
-    component: AddProductView
+    path: '/admin/products/new',
+    name: 'adminaddproducts',
+    meta: { extend: false, requiresAuth: true },
+    component: AdminProductAddView
   },
   {
-    path: '/provider/products/:productId/edit',
-    name: 'editproduct',
-    meta: { extend: false, requiresAuth: true, supplier: true  },
-    component: EditProductView
+    path: '/admin/products/:productId/edit',
+    name: 'admineditproducts',
+    meta: { extend: false, requiresAuth: true },
+    component: AdminProductEditView
   },
+
+  ///Orders
   {
-    path: '/provider/orders',
+    path: '/admin/orders',
     name: 'adminorders',
-    meta: { extend: false, requiresAuth: true, supplier: true },
+    meta: { extend: false, requiresAuth: true },
     component: AdminOrderView
   },
+
+  /// Settings
   {
-    path: '/provider/orders/:orderId/edit',
-    name: 'admineditorder',
-    meta: { extend: false, requiresAuth: true, supplier: true },
-    component: AdminEditOrderView
+    path: '/admin/settings',
+    name: 'adminsettings',
+    meta: { extend: false, requiresAuth: true },
+    component: AdminStoreSettingsView
   },
   {
-    path: '/provider/sellers',
-    name: 'adminsellers',
-    meta: { extend: false, requiresAuth: true, supplier: true },
-    component: AdminSellerView
+    path: '/admin/settings/shipping',
+    name: 'adminshipping',
+    meta: { extend: false, requiresAuth: true },
+    component: AdminStoreShippingView
   },
-  /* 
-  {
-    path: '/settings',
-    name: 'settings',
-    meta: { navbar: true, header: true, requiresAuth: true },
-    component: SettingsView
-  },
-  {
-    path: '/settings/edit',
-    name: 'editstoreinfo',
-    meta: { navbar: true, header: true, requiresAuth: true },
-    component: EditStoreInfoView
-  }, 
-  */
+
 ]
 
 const router = createRouter({
@@ -192,18 +122,9 @@ router.beforeEach((to, from, next) => {
       next({
         name: 'login',
       })
-    } else {
-      if (to.meta.seller && store.state.users.role !== 'seller' || to.meta.supplier && store.state.users.role !== 'supplier'  ) {
-        next({
-          name: '404',
-        })
-      }
-      next()
     }
-
-  } else {
-    next()
   }
+  next()
 })
 
 export default router

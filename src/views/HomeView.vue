@@ -1,60 +1,48 @@
 <template>
-    <ExtendHeader bordered="true" />
-    <div class="homecontainer">
-        <v-row class="d-flex flex-row-reverse">
-            <v-col v-for="(product, index) in allproducts" :key="product.id" :cols="$vuetify.display.smAndUp ? '4' : '12'">
-                <v-card class="mx-auto " :to="{
-                    name: 'productdetail',
-                    params: { productId: product.id },
-                }">
-                    <v-row align="center" class="spacer mt-2 mb-2" no-gutters>
-                        <v-col cols="10">
-                            <h4 class="mr-2 text-medium-emphasis text-right">{{ product.publisher }}</h4>
-                        </v-col>
-                        <v-col cols="2">
-                            <v-avatar size="40">
-                                <v-img :src="product.publisher_logo == null || product.publisher_logo == ''
-                                    ? src1
-                                    : product.publisher_logo
-                                    "></v-img>
-                            </v-avatar>
-                        </v-col>
-                    </v-row>
-                    <div class="d-flex justify-end ">
-                        <div>
-                            <v-card-text class="text-right">
-                                <h3>{{ product.productname }}</h3>
-                            </v-card-text>
-                            <p class="text-right">
-                                <span class="text-decoration-line-through text-h6 text-grey">{{ product.unitprice }} DH</span> <span
-                                    class="text-h5 text-green ml-2"> {{ product.groupprice }} DH</span>
-                            </p>
-                            <p class="text-right text-black mt-1" v-if="product.freeshipping">
-                                شحن مجاني  <v-icon class="ml-2" icon="mdi-truck-outline" ></v-icon>
-                            </p>
+    <v-app-bar class="mb-5" elevation="0">
+        <router-link class="text-decoration-none" :to="{
+            name: 'login',
+        }">
+            <v-btn color="white" size="small" variant="elevated" class="ml-2">
+                <div class="text-subtitle-1 font-weight-black ">
+                    تسجيل الدخول
+                    <v-icon class="ml-1 ">mdi-lock-outline</v-icon>
+                </div>
+            </v-btn>
+        </router-link>
+        <template v-slot:append>
+            <router-link class="text-decoration-none" :to="{
+                name: 'home',
+            }">
+                <v-img aspect-ratio="16/9" width="160" :src="logo"></v-img>
+            </router-link>
+
+        </template>
+    </v-app-bar>
+    <v-card class="hero ">
+        <v-row class="d-flex justify-center">
+            <v-col class="text-center" cols="12" md="6">
+                <div class=" text-h4 font-weight-black mb-5"> <v-icon class="text-green">mdi-whatsapp</v-icon> أنشئ متجرك
+                    المرتبط بالواتساب</div>
+                <div class="text-h5 mt-3 mb-5">
+                    استلم طلباتك عبر الواتساب عن طريق متجرك الإلكتروني
+                </div>
+                <router-link class="text-decoration-none" to="signup">
+                    <v-btn rounded="pill" color="white" size="x-large" variant="elevated" class="mt-5">
+                        <div class="text-h5 text-green-darken-3 font-weight-black ">
+                            أنشئ متجرك
+                            <v-icon class="ml-2 ">mdi-arrow-right-circle</v-icon>
                         </div>
-                        <v-avatar class="ma-3" size="100" rounded="0">
-                            <v-img :src="product.images == null || product.image == ''
-                                ? src1
-                                : product.images[0]
-                                " class="mt-2" height="100px"></v-img>
-                        </v-avatar>
-                    </div>
-                </v-card>
+                    </v-btn>
+                </router-link>
             </v-col>
         </v-row>
-    </div>
+    </v-card>
 </template>
   
 <script>
-import axios from "axios";
-import { mapGetters, mapActions } from "vuex";
+import logo from "../assets/matjary_logo_g.png";
 import { useDisplay } from "vuetify";
-import Cookies from "js-cookie";
-
-import imagevoid from "../assets/void.png";
-import storevoid from "../assets/void_store.png";
-
 
 import ExtendHeader from "../components/ExtendHeader";
 
@@ -69,43 +57,43 @@ export default {
 
     data() {
         return {
-            src1: imagevoid,
-            src2: storevoid,
-            allproducts: '',
+            logo: logo,
         };
     },
 
-    computed: {
-        ...mapGetters(["iscart", "getUserRole"]),
-    },
-
-    methods: {
-    },
-
-    created() {
-        axios
-            .get(`/product/getall`)
-            .then((response) => {
-                this.allproducts = response.data;
-            })
-            .catch((err) => { });
-    },
+    methods: {},
+    computed: {},
 };
 </script>
-<style scoped>
-.homecontainer {
-    margin: auto;
-    padding: 20px;
+<style lang="scss" scoped>
+@import "../scss/variables.scss";
+
+.hero {
+    background-image: linear-gradient(to bottom, rgb(255, 255, 255), rgb(155, 243, 201));
+    padding: 50px;
+    padding-top: 100px;
+    height: 100%;
 }
 
-.sold-out-badge {
-    background-color: red;
-    color: white;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    position: absolute;
-    margin: 0.1rem;
-    top: 0;
-    right: 0;
+.text-h3 {
+    line-height: 5rem;
+    font-family: $body-font-family !important;
+}
+
+.text-h4 {
+    line-height: 3rem;
+    font-family: $body-font-family !important;
+}
+
+.text-h5 {
+    font-family: $body-font-family !important;
+}
+
+.text-subtitle-1 {
+    font-family: $body-font-family !important;
+}
+
+.header-btn {
+    background-image: linear-gradient(to top right, rgb(68, 199, 116), rgb(68, 199, 116));
 }
 </style>

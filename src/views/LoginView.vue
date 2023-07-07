@@ -1,17 +1,18 @@
 <template>
-  <v-img class="mx-auto outlined" :width="150" :src="logo" cover></v-img>
-  <div class="d-flex justify-center">
+  <ExtendHeader bordered="false" />
+  <div class="bg-white d-flex justify-center">
     <v-form :class="$vuetify.display.smAndUp ? 'signupFormLg' : 'signupFormSm'" v-model="valid">
-      <div class="text-right align-center">
+      <div class="mt-5 text-right align-center">
+        <h2 class="text-center mb-2">تسجيل الدخول</h2>
         <h3 class="mb-3">رقم الهاتف</h3>
-        <vue-tel-input class="tel-input" v-model="phone" v-bind="bindProps" @validate="check"></vue-tel-input>
+        <vue-tel-input class="tel-input" v-model="phone" v-bind="bindProps"
+          @country-changed="countryChanged"></vue-tel-input>
         <h5 v-if="telerror" class="text-red">{{ telmsgerror }}</h5>
         <h3 class="mb-3 mt-3">كلمة المرور</h3>
         <v-text-field :prepend-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'"
-          outlined v-model="password" :rules="passwordRules"
-          @click:prepend-inner="visible = !visible"></v-text-field>
+          outlined v-model="password" :rules="passwordRules" @click:prepend-inner="visible = !visible"></v-text-field>
       </div>
-      <v-btn :disabled="!valid" :loading="loading" class="mt-5 text-white" color="light-green" size="large" block dark
+      <v-btn :disabled="!vaidform" :loading="loading" class="mt-5 text-white" color="light-green" size="large" block dark
         @click="submitForm()">
         <h3>تابع</h3>
       </v-btn>
@@ -31,12 +32,15 @@
 </template>
 
 <script>
+import parsePhoneNumber from 'libphonenumber-js'
+import axios from "axios";
+
 import majary_logo from "../assets/matjary_logo_g.png";
 
 import { mapGetters, mapActions } from "vuex";
 import { useDisplay } from "vuetify";
 
-import BtnXlg from "@/components/BtnXlg";
+import ExtendHeader from "../components/ExtendHeader";
 
 export default {
   setup() {
@@ -44,7 +48,7 @@ export default {
   },
 
   components: {
-    BtnXlg,
+    ExtendHeader
   },
 
   data: () => ({
@@ -52,29 +56,27 @@ export default {
     valid: false,
     loading: false,
     phone: "",
+
     password: "",
     visible: false,
     incorrectAuth: false,
     // Rules
-    emailRules: [
-      (v) => !!v || "أدخل عنوان البريد الإلكتروني",
-      (v) => /.+@.+\..+/.test(v) || "عنوان البريد الإلكتروني غير صحيح",
-    ],
     passwordRules: [(v) => !!v || "أدخل كلمة المرور"],
 
     //
+    countryCode: '',
     loading: false,
-    required: [(v) => !!v || "لا يجوز أن يُترَك هذا الحقل فارغًا"],
     bindProps: {
       mode: "international",
-      defaultCountry: "MA",
+      autoFormat: false,
       disabledFetchingCountry: false,
       disabled: false,
       disabledFormatting: false,
       required: false,
       enabledCountryCode: true,
       enabledFlags: true,
-      onlyCountries: ['MA'],
+      preferredCountries: ['MA', 'DZ', 'BH', 'EG', 'KW', 'LB', 'LY', 'OM', 'QA', 'SA', 'TN', 'AE', 'YE', 'SY', 'IQ', 'JO', 'SD', 'MR', 'PS'],
+      onlyCountries: [],
       ignoredCountries: [],
       autocomplete: "off",
       name: "phone",
@@ -84,15 +86,15 @@ export default {
       dropdownOptions: {
         disabledDialCode: false,
         showDialCodeInList: true,
-        showDialCodeInSelection: false,
+        showDialCodeInSelection: true,
         showFlags: true,
       },
       inputOptions: {
         showDialCode: false,
       },
     },
-    isvalildtel:false,
-    validatetel:'',
+    isvalildtel: false,
+    validatetel: '',
     telerror: false,
     telmsgerror: '',
   }),
@@ -100,7 +102,7 @@ export default {
   computed: {
     ...mapGetters(["getUser", "getUserRole"]),
     vaidform() {
-      if (this.isvalildtel && this.valid) {
+      if (this.valid && this.phone !== '') {
         return true
       }
       return false
@@ -109,23 +111,16 @@ export default {
 
   methods: {
     ...mapActions(["loginUser"]),
-    check(telnumber) {
-      if (telnumber.formatted !== '') {
-        if (telnumber.valid) {
-          this.isvalildtel = true;
-          this.validatetel = telnumber.number;
-          this.telerror = false;
-          this.telmsgerror = ''
-        } else {
-          this.isvalildtel = false;
-          this.validatetel = "";
-          this.telerror = true;
-          this.telmsgerror = "رقم الهاتف غير صحيح";
-        }
-      }
+    countryChanged(country) {
+      this.countryCode = country.iso2
+    },
+    getPhone() {
+      var phoneNumber = parsePhoneNumber(this.phone, this.countryCode)
+      this.validatetel = phoneNumber.number;
     },
     submitForm() {
       this.loading = true;
+      this.getPhone()
       const fd = {
         phone: this.validatetel,
         password: this.password
@@ -133,24 +128,20 @@ export default {
       this.loginUser(fd)
         .then(() => {
           this.loading = false;
-          if (this.getUserRole == 'seller') {
-            this.$router.push({
-              name: "products",
-            })
-          }
-          if (this.getUserRole == 'provider') {
-            this.$router.push({
-              name: "adminproducts",
-            });
-          }
-
-          return;
+          this.$router.push({
+            name: "adminproducts",
+          })
         })
         .catch((err) => {
           this.incorrectAuth = true;
           this.loading = false;
         });
     },
+  },
+  created() {
+    axios.get('https://ip2c.org/s').then((response) => {
+      this.countryCode = response.data.split(';')[1]
+    })
   },
 };
 </script>

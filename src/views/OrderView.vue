@@ -172,7 +172,7 @@ export default {
           color: "",
           icon: "mdi-clipboard-text-outline",
         };
-      } else if (text === "registred") {
+      } else if (text === "enregistred") {
         return {
           title: "الطلبات المسجلة",
           text: "مسجل",

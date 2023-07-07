@@ -13,14 +13,14 @@ const state = {
     isAuthenticated: false,
     user_id: '',
     store_id: '',
-    role: '',
+    store_phone:'',
 };
 
 const getters = {
     getAuthentication: state => state.isAuthenticated,
     getUserId: state => state.user_id,
     getStoreId: state => state.store_id,
-    getUserRole: state => state.role,
+    getstorePhone: state => state.store_phone,
 };
 
 const actions = {
@@ -30,11 +30,11 @@ const actions = {
             var refresh_decoded = jwt_decode(refresh_token);
             const isExpired = dayjs.unix(refresh_decoded.expires).diff(dayjs()) < 1
             if (!isExpired) {
-                localStorage.setItem('user', JSON.stringify({ user_id: refresh_decoded.user_id, store_id: refresh_decoded.store_id, role: refresh_decoded.role }))
+                localStorage.setItem('user', JSON.stringify({ user_id: refresh_decoded.user_id, store_id: refresh_decoded.store_id, store_phone: refresh_decoded.store_phone }))
                 context.commit('setUser', {
                     user_id: refresh_decoded.user_id,
                     store_id: refresh_decoded.store_id,
-                    role: refresh_decoded.role
+                    store_phone: refresh_decoded.store_phone
                 });
             }
             else {
@@ -60,7 +60,7 @@ const actions = {
                 .then(response => {
                     localStorage.setItem('accessToken', response.data.access_token);
                     localStorage.setItem('refreshToken', response.data.refresh_token);
-                    localStorage.setItem('user', JSON.stringify({ user_id: response.data.id, store_id: response.data.store_id, role: response.data.role, storename: response.data.storename, }))
+                    localStorage.setItem('user', JSON.stringify({ user_id: response.data.id, store_id: response.data.store_id, store_phone: response.data.phone, storename: response.data.storename, }))
                     context.commit('setLoginUser', response.data);
                     resolve()
                 }).catch(err => {
@@ -81,19 +81,19 @@ const mutations = {
         state.isAuthenticated = true,
         state.user_id = user.id,
         state.store_id = user.store_id,
-        state.role = user.role
+        state.store_phone = user.phone
     ),
     setUser: (state, user) => (
         state.isAuthenticated = true,
         state.user_id = user.user_id,
         state.store_id = user.store_id,
-        state.role = user.role
+        state.store_phone = user.store_phone
     ),
     logoutUser: (state) => (
         state.isAuthenticated = false,
         state.user_id = '',
         state.store_id = '',
-        state.role = ''
+        state.store_phone = ''
     ),
 };
 

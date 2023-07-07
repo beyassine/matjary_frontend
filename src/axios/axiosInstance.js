@@ -3,16 +3,16 @@ import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 
 const refreshToken = (refresh_token) => {
-    var urefresh_url=`https://matjaryapi.online/user/refresh?token=${refresh_token}`
+    var refresh_url=`https://matjaryapi.online/user/refresh?token=${refresh_token}`
     var refresh_localurl=`http://127.0.0.1:8000/user/refresh?token=${refresh_token}`
     const payload = {
-        token: refresh_token
+        token: refresh_url
     }
     const headers = {
         'Content-Type': 'application/json'
     }
     return new Promise((resolve, reject) => {
-        return axios.post(urefresh_url, { headers: headers }).then((response) => {
+        return axios.post(refresh_url, { headers: headers }).then((response) => {
             resolve(response)
         }).catch((error) => {
             reject(error)

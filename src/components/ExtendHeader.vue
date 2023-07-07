@@ -1,8 +1,12 @@
 <template>
-  <v-app-bar :class="bordered == 'true' ? 'd-flex justify-end border' : 'd-flex justify-end' " elevation="0">
+  <v-app-bar :class="bordered == 'true' ? 'd-flex justify-end border' : 'd-flex justify-end'" elevation="0">
     <v-app-bar-nav-icon class="text-white" varian></v-app-bar-nav-icon>
     <template v-slot:append>
-      <v-img aspect-ratio="16/9" width="180" :src="logo"></v-img>
+      <router-link class="text-decoration-none" :to="{
+        name: 'home',
+      }">
+        <v-img aspect-ratio="16/9" width="160" :src="logo"></v-img>
+      </router-link>
     </template>
   </v-app-bar>
 </template>

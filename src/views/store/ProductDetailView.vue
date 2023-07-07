@@ -2,7 +2,7 @@
   <ExtendHeader bordered="true" />
   <div class="container ">
     <v-row class="d-flex flex-row-reverse bg-white">
-      <v-col :cols="$vuetify.display.smAndUp ? '4' : '12'">
+      <v-col :cols="$vuetify.display.mdAndUp ? '6' : '12'">
         <v-card-text class="text-right">
           <v-row align="center" class="spacer" no-gutters>
             <v-col cols="10">
@@ -17,58 +17,41 @@
               </v-avatar>
             </v-col>
           </v-row>
-          <h2 class="mt-5">{{ product.productname }}</h2>
         </v-card-text>
+        <v-divider class="mb-3 "></v-divider>
         <v-row>
           <v-col cols="12">
             <v-img height="350px" :src="bigImage" />
           </v-col>
-          <v-col cols="3" v-for="(image, index) in images" :key="index">
+          <div>
+
+          </div>
+          <v-col cols="3" v-for="(image, index) in filteredImages" :key="index">
             <v-img v-if="image !== ''" height="80px" :src="image" @click="selectImage(index)" />
           </v-col>
         </v-row>
-        <v-card-text>
-          <ul>
-            <li v-for="message in messages">
-              {{ message }}
-            </li>
-          </ul>
-        </v-card-text>
-        <v-card-text class="mt-3 text-right">
-          <v-chip size="large" class="mb-3" :color="getstatus('registred').color">
-            {{ getstatus('registred').text }}
-            <v-icon class="ml-2">
-              {{ getstatus('registred').icon }}
-            </v-icon>
-          </v-chip>
-          <p>
-            <span class="text-decoration-line-through text-h6">{{ product.unitprice }} DH</span> <span
-              class="text-h4 text-green ml-2"> {{ product.groupprice }} DH</span>
-          </p>
-          <p class="text-right text-black mt-3" v-if="product.freeshipping">
+        <v-card-text class="text-right">
+          <h2 class="mt-3 ">{{ product.productname }}</h2>
+          <h1 class=" mt-3">{{ product.unitprice }} <span class="text-h5">د.م </span></h1>
+          <p class="text-black mt-3" v-if="product.freeshipping">
             شحن مجاني <v-icon class="ml-2" icon="mdi-truck-outline"></v-icon>
           </p>
-          <h3 v-if="stillTime" class="text-red mt-3">الوقت المتبقي : {{ remainingDays }} أيام {{ remainingHours }} ساعة {{
-            remainingMinutes }} دقيقة
-          </h3>
-          <h3 v-if="!stillTime" class="text-red mt-3">الوقت المتبقي : إنتهى
-          </h3>
-          <h3 class="mt-2" v-if="product.groupquantity > 0"> {{ product.groupquantity }} : عدد المشترين المطلوب <v-icon
-              class="ml-2">mdi-check-circle-outline</v-icon></h3>
-          <h3 class="mt-2" v-if="product.groupquantity > 0"> {{ buyers_count }} : عدد المشترين الحالي <v-icon
-              class="ml-2">mdi-account-group</v-icon></h3>
         </v-card-text>
+        <v-card-text class="text-right">
+          <p>{{ product.description }}</p>
+        </v-card-text>
+
+        <v-divider></v-divider>
       </v-col>
-      <v-col class="bg-white" :cols="$vuetify.display.smAndUp ? '6' : '12'">
+      <v-col class="bg-white" :cols="$vuetify.display.mdAndUp ? '6' : '12'">
         <v-card-title class="mb-3">
           <h3 class="text-right text-green">أضف طلبك</h3>
-          <v-divider></v-divider>
         </v-card-title>
         <v-form v-model="valid">
           <v-card-item class="mt-3">
             <div class="text-right align-center">
               <h3 class="mb-3">الإسم الكامل<v-icon class="ml-2">mdi-pencil-outline</v-icon></h3>
-              <v-text-field outlined type="text" reverse v-model="fullname" :readonly="loading" dense></v-text-field>
+              <v-text-field outlined type="text" v-model="fullname" :readonly="loading" dense></v-text-field>
             </div>
           </v-card-item>
           <v-card-item>
@@ -85,14 +68,14 @@
                   </v-btn></v-col>
               </v-row>
             </div>
-
           </v-card-item>
           <v-card-item>
             <div class="text-right align-center">
               <div>
-                <h3 class="mb-3"> * رقم الهاتف <v-icon class="ml-2">mdi-phone-outline</v-icon>
+                <h3 class="mb-3"> * (واتساب) رقم الهاتف <v-icon class="ml-2 text-green">mdi-whatsapp</v-icon>
                 </h3>
-                <vue-tel-input class="tel-input" v-model="phone" v-bind="bindProps" @validate="check"></vue-tel-input>
+                <vue-tel-input class="tel-input" v-model="phone" v-bind="bindProps"
+                  @country-changed="countryChanged"></vue-tel-input>
                 <h5 v-if="telerror" class="text-red">{{ telmsgerror }}</h5>
               </div>
             </div>
@@ -104,11 +87,8 @@
                 :rules="required" return-object></v-select>
             </div>
           </v-card-item>
-          <v-card-title>
-            <h3 class="text-right mb-3">ملخص الطلب</h3>
-            <v-divider></v-divider>
-          </v-card-title>
           <v-card-title class="text-right">
+            <v-divider class="mb-3"></v-divider>
             <h4>
               {{ total_products.toFixed(2) }} : ثمن المنتجات الإجمالي
             </h4>
@@ -119,48 +99,36 @@
             <h4>{{ total_order.toFixed(2) }} : الثمن الإجمالي للطلب</h4>
           </v-card-title>
           <v-card-actions>
-            <v-btn block color="green-lighten-1" size="large" variant="elevated" class="mt-5" @click="addOrder"
+            <v-btn block color="green-darken-1" size="large" variant="elevated" class="mt-5" @click="addOrder"
               :disabled="validform" :loading="loading">
-              <h4>تأكيد الطلب</h4>
+              <h4>أطلب عبر واتساب</h4>
+              <v-icon class="ml-2">mdi-whatsapp</v-icon>
             </v-btn>
           </v-card-actions>
+          <a ref="whatsappbtn" :href="whatsapplink" class="d-none">
+            <v-btn block color="green-lighten-1" size="large" variant="elevated" class="mt-5">
+              <h4>إبعث طلبك عبر الواتساب</h4>
+              <v-icon class="ml-2">mdi-whatsapp</v-icon>
+            </v-btn>
+          </a>
         </v-form>
       </v-col>
     </v-row>
   </div>
-  <div class="text-center">
-    <v-dialog v-model="dialog" width="auto" class="dialog">
-      <v-card>
-        <v-card-text class="d-flex justify-center">
-          <v-icon color="success" icon="mdi-check-circle-outline" size="x-large"></v-icon>
-        </v-card-text>
-        <v-card-text>
-          <h3>لقد تم إضافة طلبكم بنجاح</h3>
-        </v-card-text>
-        <v-card-actions class="d-flex justify-center">
-          <router-link class="text-decoration-none text-center" :to="{
-            name: 'home',
-          }">
-            <v-btn color="info" block @click="dialog = false">
-              <h5> القائمة الرئيسية <v-icon color="info" icon="mdi-keyboard-return"></v-icon></h5>
-            </v-btn>
-          </router-link>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </div>
 </template>
   
 <script>
-import Pusher from 'pusher-js'
+
+import parsePhoneNumber from 'libphonenumber-js'
 import axios from "axios";
-import { mapGetters, mapActions } from "vuex";
+
+import { mapGetters } from "vuex";
 import { useDisplay } from "vuetify";
 
-import imagevoid from "../assets/void.png";
-import storevoid from "../assets/void_store.png";
+import imagevoid from "../../assets/void.png";
+import storevoid from "../../assets/void_store.png";
 
-import ExtendHeader from "../components/ExtendHeader";
+import ExtendHeader from "../../components/ExtendHeader";
 
 
 
@@ -175,15 +143,17 @@ export default {
 
   data() {
     return {
-      messages: [],
+      storeId: '',
+      storePhone: '',
       productId: this.$route.params.productId,
       src1: imagevoid,
       src2: storevoid,
       product: "",
       images: '',
-      selectedItem: 0,// coordinates form
-      active_buyer: '',
-      cart: '',
+      filteredImages: '',
+      selectedItem: 0,
+      freeshipping: false,
+      // coordinates form
       valid: false,
       loading: false,
       required: [(v) => !!v || "لا يجوز أن يُترَك هذا الحقل فارغًا"],
@@ -192,25 +162,23 @@ export default {
       phone: '',
       selectedcity: "",
       cities: '',
-      //time counter
-      remainingTime: 0,
-      stillTime: true,
-      countdownDate: '',
       //vue-tel-input
+      countryCode: '',
       telerror: false,
       telmsgerror: '',
       validatetel: "",
       isvalildtel: false,
       bindProps: {
         mode: "international",
-        defaultCountry: "MA",
+        autoFormat: false,
         disabledFetchingCountry: false,
         disabled: false,
         disabledFormatting: false,
         required: false,
         enabledCountryCode: true,
         enabledFlags: true,
-        onlyCountries: ['MA'],
+        preferredCountries: ['MA', 'DZ', 'BH', 'EG', 'KW', 'LB', 'LY', 'OM', 'QA', 'SA', 'TN', 'AE', 'YE', 'SY', 'IQ', 'JO', 'SD', 'MR', 'PS'],
+        onlyCountries: [],
         ignoredCountries: [],
         autocomplete: "off",
         name: "phone",
@@ -220,7 +188,7 @@ export default {
         dropdownOptions: {
           disabledDialCode: false,
           showDialCodeInList: true,
-          showDialCodeInSelection: false,
+          showDialCodeInSelection: true,
           showFlags: true,
         },
         inputOptions: {
@@ -233,39 +201,26 @@ export default {
   },
 
   computed: {
+    ...mapGetters(["getstorePhone"]),
+
+    filtereImagesbyValue() {
+      return this.images.filter(url => url !== '');
+    },
     bigImage() {
-      return this.images[this.selectedItem];
-    },
-    remainingDays() {
-      return Math.floor(this.remainingTime / (24 * 60 * 60 * 1000));
-    },
-    remainingHours() {
-      return Math.floor((this.remainingTime % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-    },
-    remainingMinutes() {
-      return Math.floor((this.remainingTime % (60 * 60 * 1000)) / (60 * 1000));
-    },
-    remainingSeconds() {
-      return Math.floor((this.remainingTime % (60 * 1000)) / 1000);
-    },
-    buyers_count() {
-      if (this.product.buyers == null) {
-        return 0
-      }
-      return this.product.buyers.length
+      return this.filteredImages[this.selectedItem];
     },
     total_products: function () {
-      return parseFloat(this.quantity) * parseFloat(this.product.groupprice);
+      return parseFloat(this.quantity) * parseFloat(this.product.unitprice);
     },
     shipcost: function () {
       if (this.selectedcity == '') {
         return 0
       }
 
-      if (this.product.freeshipping){
+      if (this.product.freeshipping) {
         return 0
       }
-      
+
       return this.selectedcity['cost']
     },
     shipcity: function () {
@@ -278,55 +233,23 @@ export default {
       return parseFloat(this.total_products) + parseFloat(this.shipcost)
     },
     validform() {
-      if (this.isvalildtel && this.valid && this.stillTime && this.shipcost !== 0) {
+      if (this.phone !== '' && this.valid) {
         return false
       }
       return true
     },
+    whatsapplink() {
+      return `https://wa.me/` + this.storePhone + "?text=" + "مرحبًا، قمت بطلب " + ":" + "%0a" + this.product.productname + "%20" + this.quantity + "%0a" + "المدينة" + "%20" + this.shipcity  + "%0a" + "شكرا"
+    },
   },
 
   methods: {
-    startCountdown() {
-      if (this.stillTime) {
-        const countdown = setInterval(() => {
-          const currentTime = new Date().getTime();
-          this.remainingTime = this.countdownDate - currentTime;
-          if (this.remainingTime <= 0) {
-            clearInterval(countdown);
-            this.stillTime = false
-          }
-        }, 1000); // Update every second
-      }
+    countryChanged(country) {
+      this.countryCode = country.iso2
     },
-    getstatus() {
-      if (this.buyers_count < this.product.groupquantity) {
-        return {
-          text: "في إنتظار المشترين",
-          color: "grey",
-          icon: "mdi-timer-sand",
-        };
-      } else {
-        return {
-          text: "عرض مؤكد",
-          color: "green",
-          icon: "mdi-check-bold",
-        };
-      }
-    },
-    check(telnumber) {
-      if (telnumber.formatted !== '') {
-        if (telnumber.valid) {
-          this.isvalildtel = true;
-          this.validatetel = telnumber.number;
-          this.telerror = false;
-          this.telmsgerror = ''
-        } else {
-          this.isvalildtel = false;
-          this.validatetel = "";
-          this.telerror = true;
-          this.telmsgerror = "رقم الهاتف غير صحيح";
-        }
-      }
+    getPhone() {
+      var phoneNumber = parsePhoneNumber(this.phone, this.countryCode)
+      this.validatetel = phoneNumber.number;
     },
     selectImage(index) {
       this.selectedItem = index;
@@ -342,58 +265,50 @@ export default {
     // submit Form
     addOrder() {
       this.loading = true
+      this.getPhone()
       const fd = {
-        fullname: this.fullname,
-        phone: this.phone,
-        quantity: this.quantity,
-        total_products: this.total_products,
+        user_id: this.storeId,
+        products: { id: this.productId, img: this.images[0], name: this.product.productname, price: this.product.unitprice, quantity: this.quantity, total_product: this.total_products },
+        phone: this.validatetel,
+        clientname: this.fullname,
         shipcity: this.shipcity,
         shipcost: this.shipcost,
+        total_products: this.total_products,
         total_order: this.total_order,
+        orderstatus: 'enregistred'
       }
       axios
-        .post(`/product/addbuyer/${this.product.store_id}/${this.product.id}`, fd)
+        .post(`/order/create`, fd)
         .then((response) => {
           if (response.status === 200) {
+            this.$refs.whatsappbtn.click();
             this.loading = false
-            this.dialog = true
           }
         });
 
     },
   },
-  mounted() {
-    //Pusher.logToConsole = true;
-
-    //const pusher = new Pusher('84dc426d70ef51cb7ac0', {
-    //cluster: 'eu'
-    //});
-
-    //const channel = pusher.subscribe('my-channel');
-    //channel.bind('my-event', function (data) {
-    //app.messages.push(JSON.stringify(data));
-    //});
-
-  },
-
   created() {
+    this.storePhone = this.getstorePhone;
+    axios.get('https://ip2c.org/s').then((response) => {
+      this.countryCode = response.data.split(';')[1]
+    })
     axios
       .get(`/product/get/${this.productId}`)
       .then((response) => {
-        this.product = response.data;
+        this.product = response.data
+        this.storeId = response.data.store_id
         this.images = response.data.images
+        this.filteredImages = this.filtereImagesbyValue
         this.cities = response.data.shipping
-        this.countdownDate = response.data.datelimit
       })
       .catch((err) => { });
-
-    this.startCountdown();
   },
 };
 </script>
 
 <style lang="scss">
-@import "../scss/variables.scss";
+@import "../../scss/variables.scss";
 
 .dialog {
   font-family: $body-font-family;

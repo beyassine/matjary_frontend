@@ -3,7 +3,7 @@
     <Header v-if="!this.$route.meta.extend" />
     <Sidebar v-if="!this.$route.meta.extend"/>
     <MobileSidebar v-if="!this.$route.meta.extend"/>
-    <v-main class="main">      
+    <v-main :class="this.$route.meta.white? 'white':'main'">      
       <router-view/>      
     </v-main> 
   </v-app>
@@ -45,6 +45,9 @@ export default {
 @import "./scss/variables.scss";
 .app {
   font-family: $body-font-family;
+}
+.white{
+  background-color: white; 
 }
 .main{
   background-color: rgb(245, 245, 245); 
