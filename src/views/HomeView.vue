@@ -81,7 +81,8 @@ export default {
 }
 
 .text-h4 {
-    line-height: 3rem;
+    line-height: 3rem;    
+    letter-spacing: -1px;
     font-family: $body-font-family !important;
 }
 

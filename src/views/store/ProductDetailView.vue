@@ -72,7 +72,7 @@
           <v-card-item>
             <div class="text-right align-center">
               <div>
-                <h3 class="mb-3"> * (واتساب) رقم الهاتف <v-icon class="ml-2 text-green">mdi-whatsapp</v-icon>
+                <h3 class="mb-3"> * رقم الواتساب<v-icon class="ml-2 text-green">mdi-whatsapp</v-icon>
                 </h3>
                 <vue-tel-input class="tel-input" v-model="phone" v-bind="bindProps"
                   @country-changed="countryChanged"></vue-tel-input>
@@ -107,7 +107,7 @@
           </v-card-actions>
           <a ref="whatsappbtn" :href="whatsapplink" class="d-none">
             <v-btn block color="green-lighten-1" size="large" variant="elevated" class="mt-5">
-              <h4>إبعث طلبك عبر الواتساب</h4>
+              <h4 class="btn-title">إبعث طلبك عبر الواتساب</h4>
               <v-icon class="ml-2">mdi-whatsapp</v-icon>
             </v-btn>
           </a>
@@ -307,7 +307,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../scss/variables.scss";
 
 .dialog {
@@ -321,5 +321,8 @@ export default {
   border-top: 1px solid rgb(235, 235, 235);
   border-left: 1px solid rgb(235, 235, 235);
   border-right: 1px solid rgb(235, 235, 235);
+}
+.btn-title {
+  letter-spacing: -1px;
 }
 </style>
