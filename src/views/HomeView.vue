@@ -22,9 +22,9 @@
     <v-card class="hero ">
         <v-row class="d-flex justify-center">
             <v-col class="text-center" cols="12" md="6">
-                <div class=" text-h5 font-weight-black mb-5"> <v-icon class="text-green">mdi-whatsapp</v-icon> أنشئ متجرك
+                <div class=" text-h4 font-weight-black mb-5"> <v-icon class="text-green">mdi-whatsapp</v-icon> أنشئ متجرك
                     المرتبط بالواتساب</div>
-                <div class="text-h6 mt-3 mb-5">
+                <div class="text-h5 mt-3 mb-5">
                     استلم طلباتك عبر الواتساب عن طريق متجرك الإلكتروني
                 </div>
                 <router-link class="text-decoration-none" to="signup">
