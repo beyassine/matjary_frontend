@@ -25,7 +25,7 @@
                 <div class=" text-h4 font-weight-black mb-5"> <v-icon class="text-green">mdi-whatsapp</v-icon> أنشئ متجرك
                     المرتبط بالواتساب</div>
                 <div class="text-h5 mt-3 mb-5">
-                    استلم طلباتك عبر الواتساب عن طريق متجرك الإلكتروني
+                    يمكنك الآن إستلام و تأكيد طلباتك عبر الواتساب بكل سهولة
                 </div>
                 <router-link class="text-decoration-none" to="signup">
                     <v-btn rounded="pill" color="white" size="x-large" variant="elevated" class="mt-5">
