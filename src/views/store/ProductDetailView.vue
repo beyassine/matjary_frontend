@@ -324,6 +324,6 @@ export default {
 }
 
 .btn-title{  
-  letter-spacing: 0.08 rem;
+  letter-spacing: 0.03rem;
 }
 </style>
