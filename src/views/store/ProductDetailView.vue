@@ -99,7 +99,7 @@
             <h4>{{ total_order.toFixed(2) }} : الثمن الإجمالي للطلب</h4>
           </v-card-title>
           <v-card-actions>
-            <v-btn block color="green-darken-1" size="large" variant="elevated" class="text-h4 mt-5" @click="addOrder"
+            <v-btn block color="green-darken-1" size="large" variant="elevated" class="text-h5 text-white mt-5" @click="addOrder"
               :disabled="validform" :loading="loading">
               أطلب عبر واتساب
               <v-icon class="ml-2">mdi-whatsapp</v-icon>
