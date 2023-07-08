@@ -101,13 +101,13 @@
           <v-card-actions>
             <v-btn block color="green-darken-1" size="large" variant="elevated" class="mt-5" @click="addOrder"
               :disabled="validform" :loading="loading">
-              <h4>أطلب عبر واتساب</h4>
+              <h4 class="btn-title" >أطلب عبر واتساب</h4>
               <v-icon class="ml-2">mdi-whatsapp</v-icon>
             </v-btn>
           </v-card-actions>
           <a ref="whatsappbtn" :href="whatsapplink" class="d-none">
-            <v-btn block color="green-lighten-1" size="large" variant="elevated" class="mt-5">
-              <h4 class="btn-title">إبعث طلبك عبر الواتساب</h4>
+            <v-btn block color="green-lighten-1" size="large" variant="elevated" class="mt-5 text-h4">
+              <h4>إبعث طلبك عبر الواتساب</h4>
               <v-icon class="ml-2">mdi-whatsapp</v-icon>
             </v-btn>
           </a>
@@ -307,7 +307,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../../scss/variables.scss";
 
 .dialog {
@@ -322,7 +322,8 @@ export default {
   border-left: 1px solid rgb(235, 235, 235);
   border-right: 1px solid rgb(235, 235, 235);
 }
-.btn-title {
-  letter-spacing: -1px;
+
+.btn-title{  
+  letter-spacing: 0.08 rem;
 }
 </style>
