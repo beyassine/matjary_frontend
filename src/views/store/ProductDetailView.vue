@@ -98,7 +98,7 @@
           <v-card-title class="text-right">
             <h4>{{ total_order.toFixed(2) }} : الثمن الإجمالي للطلب</h4>
           </v-card-title>
-          <v-card-actions>
+          <v-card-actions class="mb-5">
             <v-btn block color="green-darken-1" size="large" variant="elevated" class="text-h5 text-white mt-5" @click="addOrder"
               :disabled="validform" :loading="loading">
               أطلب عبر واتساب

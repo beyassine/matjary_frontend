@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar class="mb-5" elevation="0">
+    <v-app-bar class=" border mb-5" elevation="0">
         <router-link class="text-decoration-none" :to="{
             name: 'login',
         }">
@@ -36,6 +36,9 @@
                     </v-btn>
                 </router-link>
             </v-col>
+            <v-col>
+                <v-img height="400" :src="hero_gif"></v-img>
+            </v-col>
         </v-row>
     </v-card>
 </template>
@@ -43,6 +46,8 @@
 <script>
 import logo from "../assets/matjary_logo_g.png";
 import { useDisplay } from "vuetify";
+
+import hero_gif from "../assets/gifs/hero_gif.gif";
 
 import ExtendHeader from "../components/ExtendHeader";
 
@@ -57,6 +62,7 @@ export default {
 
     data() {
         return {
+            hero_gif:hero_gif,
             logo: logo,
         };
     },
@@ -69,7 +75,6 @@ export default {
 @import "../scss/variables.scss";
 
 .hero {
-    background-image: linear-gradient(to bottom, rgb(255, 255, 255), rgb(155, 243, 201));
     padding: 50px;
     padding-top: 100px;
     height: 100%;
@@ -81,7 +86,7 @@ export default {
 }
 
 .text-h4 {
-    line-height: 3rem;    
+    line-height: 3rem;
     letter-spacing: 0.03rem !important;
     font-family: $body-font-family !important;
 }
