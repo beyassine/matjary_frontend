@@ -37,7 +37,7 @@
                 </router-link>
             </v-col>
             <v-col>
-                <v-img height="400" :src="hero_gif"></v-img>
+                <v-img height="300" :src="hero_gif"></v-img>
             </v-col>
         </v-row>
     </v-card>
