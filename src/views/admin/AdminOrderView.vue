@@ -163,7 +163,7 @@ export default {
         },
         validateOrder(order, index) {
             order.validloading = true
-            this.whatsapplink='https://wa.me/' + order.phone.replace(/\s/g, '') + "?text=" + "مرحبًا لقد تم تأكيد طلبكم "+ ":" + "%0a" + order.products.name + "%20" + order.products.quantity + "%0a" + "المدينة" + "%20" + ":" + order.shipcity + "%0a" + "الثمن الإجمالي" + "%20"+ ":" + order.total_order + "د.م" + "%0a" + "شكرا"
+            this.whatsapplink='https://wa.me/' + order.phone.replace(/\s/g, '') + "?text=" + "مرحبًا لقد تم تأكيد طلبكم "+ ":" + "%0a" + "%0a" + "- " + order.products.name + "%0a"+ "- " + "الكمية" + ": " +  order.products.quantity + "%0a" + "- " + "المدينة" + ": " + order.shipcity+ "%0a" + "- " + "الثمن الإجمالي"+ ": " + order.total_order + "د.م" + "%0a"+ "%0a" + "شكرا"
             axiosInstance.post(`/order/validate/${order.id}/${this.storeId}`).then((response) => {
                 if (response.status === 200) {
                     this.$refs.whatsappbtn.click()

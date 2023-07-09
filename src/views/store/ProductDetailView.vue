@@ -105,7 +105,7 @@
               <v-icon class="ml-2">mdi-whatsapp</v-icon>
             </v-btn>
           </v-card-actions>
-          <a ref="whatsappbtn" target="_blank" :href="whatsapplink" class="d-none">
+          <a ref="whatsappbtn" :href="whatsapplink" class="d-none">
             <v-btn block color="green-lighten-1" size="large" variant="elevated" class="mt-5 text-h4">
               <h4>إبعث طلبك عبر الواتساب</h4>
               <v-icon class="ml-2">mdi-whatsapp</v-icon>
@@ -239,7 +239,7 @@ export default {
       return true
     },
     whatsapplink() {
-      return `https://wa.me/` + this.storePhone + "?text=" + "مرحبًا، قمت بطلب " + ": " + "%0a" + "%0a" + "- "+ this.product.productname + "%0a"+ "- " + "الكمية" + ": " +  this.quantity + "%0a" + "- " + "المدينة" + ": " + this.shipcity },
+      return `https://wa.me/` + this.storePhone + "?text=" + "مرحبًا، قمت بطلب " + ": " + "%0a" + "%0a" + "- " + this.product.productname + "%0a"+ "- " + "الكمية" + ": " +  this.quantity + "%0a" + "- " + "المدينة" + ": " + this.shipcity },
   },
 
   methods: {
