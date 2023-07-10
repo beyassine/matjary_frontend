@@ -14,13 +14,13 @@
             <router-link class="text-decoration-none" :to="{
                 name: 'home',
             }">
-                <v-img aspect-ratio="16/9" width="160" :src="logo"></v-img>
+                <v-img aspect-ratio="16/9" width="120" :src="logo"></v-img>
             </router-link>
 
         </template>
     </v-app-bar>
     <v-card class="hero ">
-        <v-row class="d-flex justify-center">
+        <v-row class="d-flex justify-center align-center flex-row-reverse">
             <v-col class="text-center" cols="12" md="6">
                 <div class=" text-h4 font-weight-black mb-5"> <v-icon class="text-green">mdi-whatsapp</v-icon> أنشئ متجرك
                     المرتبط بالواتساب</div>
@@ -37,7 +37,7 @@
                 </router-link>
             </v-col>
             <v-col>
-                <v-img height="300" :src="hero_gif"></v-img>
+                <v-img height="350" :src="hero_gif"></v-img>
             </v-col>
         </v-row>
     </v-card>
@@ -47,7 +47,7 @@
 import logo from "../assets/matjary_logo_g.png";
 import { useDisplay } from "vuetify";
 
-import hero_gif from "../assets/gifs/hero_gif.gif";
+import hero_gif from "../assets/gifs/hero.gif";
 
 import ExtendHeader from "../components/ExtendHeader";
 
@@ -76,7 +76,6 @@ export default {
 
 .hero {
     padding: 50px;
-    padding-top: 100px;
     height: 100%;
 }
 
