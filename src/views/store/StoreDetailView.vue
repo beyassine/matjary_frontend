@@ -1,6 +1,5 @@
 <template>
-    <ExtendHeader bordered="true" />
-    <div class="homecontainer">
+    <div class="homecontainer mt-2">
         <div class="d-flex justify-center mt-2 mb-2">
                 <v-img height="150" :src="logo == null || logo == ''
                     ? src2
