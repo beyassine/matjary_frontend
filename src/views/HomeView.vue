@@ -24,8 +24,7 @@
             <v-row class="d-flex justify-center align-center flex-row-reverse"
                 style="padding-top: 50px;padding-bottom: 50px;">
                 <v-col class="text-center" cols="12" md="6">
-                    <div class=" text-h4 font-weight-black mb-5"> <v-icon
-                            class="text-green">mdi-whatsapp</v-icon> أنشئ
+                    <div class=" text-h4 font-weight-black mb-5"> <v-icon class="text-green">mdi-whatsapp</v-icon> أنشئ
                         متجرك
                         المرتبط بالواتساب</div>
                     <div class="text-h5 mt-3 mb-5">
@@ -51,6 +50,14 @@
                 <div class="text-h5 mt-3 mb-5">
                     لاحاجة للبحث في رسائل الواتساب على طلباتك بعد الآن، كل طلباتك منظمة في مكان واحد
                 </div>
+                <router-link class="text-decoration-none" to="signup">
+                    <v-btn rounded="pill" color="green-darken-3 " size="large" variant="elevated" class="mt-5">
+                        <div class="text-h5 text-white font-weight-black ">
+                            أنشئ متجرك
+                            <v-icon class="ml-2 ">mdi-arrow-right-circle</v-icon>
+                        </div>
+                    </v-btn>
+                </router-link>
             </v-col>
             <v-col>
                 <v-img height="400" :src="orders_gif"></v-img>
@@ -58,16 +65,36 @@
         </v-row>
         <v-row class="d-flex justify-center align-center flex-row-reverse" style="padding-top: 50px;padding-bottom: 50px;">
             <v-col class="text-right" cols="12" md="6">
-                <div class=" text-h4 font-weight-black mb-5"> أنشئ متجرك الإلكتروني في دقائق</div>
-                <div class="text-h5 mt-3 mb-5">
-                     أضف المنتجات و المعلومات الخاصة بمتجرك
-                </div>
+                <div class=" text-h4 font-weight-black mb-5"> متجرك الإلكتروني جاهز في دقائق</div>
+                <v-list-item append-icon="mdi-check" class=" text-right mt-3">
+                    <span class="text-h5">
+                        أنشئ حسابك عبر استمارة التسجيل
+                    </span>
+                </v-list-item>
+                <v-list-item append-icon="mdi-check" class=" text-right mt-3">
+                    <span class="text-h5">
+                        أضف المعلومات الخاصة بمتجرك
+                    </span>
+                </v-list-item>
+                <v-list-item append-icon="mdi-check" class=" text-right mt-3">
+                    <span class="text-h5">
+                        أضف منتجاتك
+                    </span>
+                </v-list-item>
+                <router-link class="text-decoration-none" to="signup">
+                    <v-btn rounded="pill" color="green-darken-3 " size="large" variant="elevated" class="mt-5">
+                        <div class="text-h5 text-white font-weight-black ">
+                            أنشئ متجرك
+                            <v-icon class="ml-2 ">mdi-arrow-right-circle</v-icon>
+                        </div>
+                    </v-btn>
+                </router-link>
             </v-col>
             <v-col>
                 <v-img height="400" :src="products_gif"></v-img>
             </v-col>
         </v-row>
-        <div class=" text-center text-h4 font-weight-black mt-5 mb-5">الأسعار</div>
+        <div class=" text-center text-h4 font-weight-black mt-5 mb-5">باقات الإشتراك</div>
         <v-row class="d-flex justify-center flex-row-reverse ">
             <v-col class="d-flex justify-center mt-5" :cols="$vuetify.display.mdAndUp ? '4' : '12'">
                 <v-card :width="$vuetify.display.mdAndUp ? '80%' : '100%'" color="" elevation="2">
@@ -87,10 +114,6 @@
                     <v-list-item append-icon="mdi-check-circle" class="text-right text-green-darken-1">
                         <span class="font-weight-black text-subtitle-1 text-black">
                             عدد لا محدود من المنتجات
-                        </span>
-                    </v-list-item>
-                    <v-list-item class="text-green-darken-1">
-                        <span class="font-weight-black text-subtitle-1 text-black">
                         </span>
                     </v-list-item>
                     <router-link class="text-decoration-none" to="signup">
@@ -121,24 +144,19 @@
                     </v-list-item>
                     <v-list-item append-icon="mdi-check-circle" class="text-right text-green-darken-1">
                         <span class="font-weight-black text-subtitle-1 text-black">
-                            عنوان موقع ويب
+                            رابط موقع مخصص
                         </span>
                     </v-list-item>
-                    <v-list-item append-icon="mdi-check-circle" class="text-right text-green-darken-1">
-                        <span class="font-weight-black text-subtitle-1 text-black">
-                            متجر متعدد اللغات
-                        </span>
-                    </v-list-item>
-                        <v-card-actions class="d-flex justify-center mb-2 mt-2">
-                            <a class="text-decoration-none text-white" target="_blank" href="https://wa.me/+212673090675">
-                                <v-btn rounded="pill" color="green-darken-1" size="x-large" variant="elevated" class="mt-5">
-                                    <div class="text-subtitle-1 ml-2 mr-2 text-white font-weight-black ">
-                                        تواصل معنا
-                                        <v-icon class="ml-2 ">mdi-whatsapp</v-icon>
-                                    </div>
-                                </v-btn>
-                            </a>
-                        </v-card-actions>
+                    <v-card-actions class="d-flex justify-center mb-2 mt-2">
+                        <a class="text-decoration-none text-white" target="_blank" href="https://wa.me/+212673090675">
+                            <v-btn rounded="pill" color="green-darken-1" size="x-large" variant="elevated" class="mt-5">
+                                <div class="text-subtitle-1 ml-2 mr-2 text-white font-weight-black ">
+                                    تواصل معنا
+                                    <v-icon class="ml-2 ">mdi-whatsapp</v-icon>
+                                </div>
+                            </v-btn>
+                        </a>
+                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
