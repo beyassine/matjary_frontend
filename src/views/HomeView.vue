@@ -108,12 +108,12 @@
                     </v-list-item>
                     <v-list-item append-icon="mdi-check-circle" class="text-right text-green-darken-1">
                         <span class="font-weight-black text-subtitle-1 text-black">
-                            عدد لا محدود من الطلبات
+                             10 منتجات
                         </span>
                     </v-list-item>
                     <v-list-item append-icon="mdi-check-circle" class="text-right text-green-darken-1">
                         <span class="font-weight-black text-subtitle-1 text-black">
-                            عدد لا محدود من المنتجات
+                            عدد لا محدود من الطلبات
                         </span>
                     </v-list-item>
                     <router-link class="text-decoration-none" to="signup">
@@ -134,17 +134,23 @@
                     <v-card-title class=" text-center text-h6 font-weight-black text-green-darken-1 mb-5">950 DH /
                         سنوي</v-card-title>
                     <v-list-item append-icon="mdi-check-circle" class="text-right text-green-darken-1">
-                        <span class="font-weight-black text-subtitle-1 text-black">كل مميزات باقة إنطلاقة
+                        <span class="font-weight-black text-subtitle-1 text-black">
+                            متجر إلكتروني مرتبط بالواتساب
                         </span>
                     </v-list-item>
                     <v-list-item append-icon="mdi-check-circle" class="text-right text-green-darken-1">
                         <span class="font-weight-black text-subtitle-1 text-black">
-                            تصميم موقع إحترافي
+                            عدد لا محدود من المنتجات
                         </span>
                     </v-list-item>
                     <v-list-item append-icon="mdi-check-circle" class="text-right text-green-darken-1">
                         <span class="font-weight-black text-subtitle-1 text-black">
-                            رابط موقع مخصص
+                            عدد لا محدود من الطلبات
+                        </span>
+                    </v-list-item>
+                    <v-list-item append-icon="mdi-check-circle" class="text-right text-green-darken-1">
+                        <span class="font-weight-black text-subtitle-1 text-black">
+                            دعم فني متقدم
                         </span>
                     </v-list-item>
                     <v-card-actions class="d-flex justify-center mb-2 mt-2">

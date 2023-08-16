@@ -11,6 +11,8 @@ import HomeView from '../views/HomeView.vue'
 // Store
 import StoreDetail from '../views/store/StoreDetailView.vue'
 import ProductDetail from '../views/store/ProductDetailView.vue'
+import CartDetail from '../views/store/StoreCart.vue'
+import frCartDetail from '../views/store/frStoreCart.vue'
 
 //Admin
 
@@ -18,11 +20,15 @@ import ProductDetail from '../views/store/ProductDetailView.vue'
 import AdminProductView from '../views/admin/AdminProductView.vue'
 import AdminProductAddView from '../views/admin/AdminProductAddView.vue'
 import AdminProductEditView from '../views/admin/AdminProductEditView.vue'
+///Categorie
+import AdminCategorieView from '../views/admin/AdminCategorieView.vue'
 ///Order
 import AdminOrderView from '../views/admin/AdminOrderView.vue'
+import AdminOrderDetailView from '../views/admin/AdminOrderDetailView.vue'
 ///Settings
 import AdminStoreSettingsView from '../views/admin/AdminStoreSettingsView.vue'
 import AdminStoreShippingView from '../views/admin/AdminStoreShippingView.vue'
+import AdminStoreInfoView from '../views/admin/AdminStoreInfoView.vue'
 
 
 const routes = [
@@ -55,14 +61,26 @@ const routes = [
   {
     path: '/:storeId',
     name: 'storedetail',
-    meta: { extend: true, requiresAuth: false },
+    meta: { extend: true, requiresAuth: false , white: true  },
     component: StoreDetail
   },
   {
-    path: '/product/:productId',
+    path: '/:storeId/:productId',
     name: 'productdetail',
     meta: { extend: true, requiresAuth: false },
     component: ProductDetail
+  },
+  {
+    path: '/:storeId/ar/checkout',
+    name: 'arstorecart',
+    meta: { extend: true, requiresAuth: false, white: true  },
+    component: CartDetail
+  },
+  {
+    path: '/:storeId/fr/checkout',
+    name: 'frstorecart',
+    meta: { extend: true, requiresAuth: false, white: true  },
+    component: frCartDetail
   },
 
   // Admin   
@@ -86,13 +104,25 @@ const routes = [
     meta: { extend: false, requiresAuth: true },
     component: AdminProductEditView
   },
-
+  ///Categories
+  {
+    path: '/admin/categories',
+    name: 'admincategories',
+    meta: { extend: false, requiresAuth: true },
+    component: AdminCategorieView
+  },
   ///Orders
   {
     path: '/admin/orders',
     name: 'adminorders',
     meta: { extend: false, requiresAuth: true },
     component: AdminOrderView
+  },
+  {
+    path: '/orders/:orderId',
+    name: 'orderdetail',
+    meta: { extend: false, requiresAuth: true },
+    component: AdminOrderDetailView
   },
 
   /// Settings
@@ -107,6 +137,12 @@ const routes = [
     name: 'adminshipping',
     meta: { extend: false, requiresAuth: true },
     component: AdminStoreShippingView
+  },
+  {
+    path: '/admin/settings/info',
+    name: 'admininfo',
+    meta: { extend: false, requiresAuth: true },
+    component: AdminStoreInfoView
   },
 
 ]

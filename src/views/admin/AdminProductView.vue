@@ -31,19 +31,6 @@
           <v-card-title class="text-right">
             <h3> د.م <span>{{ product.unitprice }}</span></h3>
           </v-card-title>
-          <router-link class="text-decoration-none" :to="{
-              name: 'productdetail',
-              params: { productId: product.id },
-            }">
-          <v-card-actions>
-            
-              <v-btn block color="blue-lighten-1" size="large" type="submit" variant="elevated"
-                class="text-h5 text-white mt-3">
-                رؤية المنتج
-                <v-icon class="ml-3">mdi-eye-outline</v-icon>
-              </v-btn>
-          </v-card-actions>
-            </router-link>
             <router-link class="text-decoration-none" :to="{
               name: 'admineditproducts',
               params: { productId: product.id },

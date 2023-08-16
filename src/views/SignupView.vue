@@ -11,12 +11,12 @@
                         <v-text-field prepend-inner-icon="" type="text" outlined v-model="storename"
                             :rules="Required"></v-text-field>
                         <h5 v-if="usernameerror" class="text-red">{{ texterror }}</h5>
-                    </v-col>
+                    </v-col><!-- 
                     <v-col cols="12">
                         <h3 class="mb-3">مجال التجارة <v-icon class="ml-2">mdi-tag-multiple-outline</v-icon> </h3>
                         <v-select label="إختر مجال تجارتك" v-model="categorie" :items="store_categrories" :rules="Required"
                             multiple></v-select>
-                    </v-col>
+                    </v-col> -->
                     <v-col cols="12">
                         <h3 class="mb-3">رقم الواتساب <v-icon class="ml-2 text-green">mdi-whatsapp</v-icon></h3>
                         <vue-tel-input class="tel-input" v-model="phone" v-bind="bindProps"
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-
+import * as amplitude from '@amplitude/analytics-browser';
 import parsePhoneNumber from 'libphonenumber-js'
 
 import majary_logo from "../assets/matjary_logo_g.png";
@@ -85,28 +85,6 @@ export default {
             store_categrories: ['أجهزة إلكترونية', 'الأزياء', 'المنزل و المطبخ', 'الصحة و الجمال', 'مستلزمات رياضية', 'منتجات الأطفال', 'مجالات أخرى'],
             password1: "",
             password2: "",
-            shipping: [
-                { city: "الدار البيضاء", cost: "0" },
-                { city: "الرباط", cost: "0" },
-                { city: "مراكش", cost: "0" },
-                { city: "اكادير", cost: "0" },
-                { city: "طنجة", cost: "0" },
-                { city: "فاس", cost: "0" },
-                { city: "سلا", cost: "0" },
-                { city: "القنيطرة", cost: "0" },
-                { city: "مكناس", cost: "0" },
-                { city: "وجدة", cost: "0" },
-                { city: "تمارة", cost: "0" },
-                { city: "الجديدة", cost: "0" },
-                { city: "المحمدية", cost: "0" },
-                { city: "تطوان", cost: "0" },
-                { city: "الناظور", cost: "0" },
-                { city: "آسفي", cost: "0" },
-                { city: "بني ملال", cost: "0" },
-                { city: "خريبكة", cost: "0" },
-                { city: "بوزنيقة", cost: "0" },
-                { city: "سطات", cost: "0" },
-            ],
             visible1: false,
             visible2: false,
             Required: [
@@ -261,9 +239,7 @@ export default {
                     storename: this.storename,
                     phone: this.validatetel,
                     country: this.countryCode,
-                    categorie: this.categoryList,
                     password: this.password1,
-                    shipping: this.shipping,
                     role: 'seller',
                 }; axios
                     .post(`/user/create`, fd)
@@ -296,6 +272,7 @@ export default {
         },
     },
     created() {
+        amplitude.track('Sign Up');
         axios.get('https://ip2c.org/s').then((response) => {
             this.countryCode=response.data.split(';')[1]
         })

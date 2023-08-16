@@ -7,40 +7,42 @@
     </v-breadcrumbs>
     <div class="container">
         <v-form class="bg-white mt-3" v-model="form" @submit.prevent="onSubmit">
-            <v-row>
-                <v-col align="end" cols="12">
-                    <v-card>
-                        <v-table density="compact">
-                            <thead>
-                                <tr>
-                                    <th class="text-right">
-                                        الثمن
-                                    </th>
-                                    <th class="text-right">
-                                        المدينة
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="item in shipping" :key="item.city">
-                                    <td>
-                                        <v-text-field append-inner-icon="mdi-pencil" type="number" variant="underlined"
-                                            reverse v-model="item.cost" :readonly="loading"></v-text-field>
-                                    </td>
-                                    <td>{{ item.city }}</td>
-                                </tr>
-                            </tbody>
-                        </v-table>
-
-                        <v-card-actions>
-                            <v-btn :disabled="!form" :loading="loading" block color="teal-darken-1" size="large"
-                                type="submit" variant="elevated" class="text-h5">
-                                تعديل
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-col>
-            </v-row>
+            <v-card-item class="d-flex justify-end">
+                <v-row>
+                    <v-col cols="3">
+                        <v-switch color="green" v-model="pickup"></v-switch>
+                    </v-col>
+                    <v-col cols="9">
+                        <h3 class="mt-3">الاستلام من المتجر</h3>
+                    </v-col>
+                </v-row>
+            </v-card-item>
+            <v-card-item class="d-flex justify-end">
+                <v-row>
+                    <v-col cols="3">
+                        <v-switch color="green" v-model="shipping"></v-switch>
+                    </v-col>
+                    <v-col cols="9">
+                        <h3 class="mt-3">شحن و توصيل</h3>
+                    </v-col>
+                </v-row>
+            </v-card-item>
+            <v-card-item class="d-flex justify-end">
+                <v-row>
+                    <v-col cols="6">
+                        <v-text-field append-inner-icon="mdi-tag" placeholder="0.00" variant="outlined" type="number"
+                            v-model="shipcost"></v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                        <h3 class="mt-3">ثمن الشحن</h3>
+                    </v-col>
+                </v-row>
+            </v-card-item>
+            <v-card-actions>
+                <v-btn block color="green-lighten-1" size="large" type="submit" variant="elevated" class="text-h5">
+                    تعديل
+                </v-btn>
+            </v-card-actions>
         </v-form>
     </div>
 </template>
@@ -65,8 +67,9 @@ export default {
             storeId: "",
             form: false,
             loading: false,
-            shipping:"",
-
+            pickup: true,
+            shipping: true,
+            shipcost: '0'
         };
     },
 
@@ -77,9 +80,7 @@ export default {
     methods: {
         onSubmit() {
             this.loading = true;
-            // Prepare the updated data
-            const fd = this.shipping
-            axiosInstance.post(`/store/${this.storeId}/updateshipping`, fd).then((response) => {
+            axiosInstance.post(`/store/${this.storeId}/updateshipping?pickup=${this.pickup}&shipping=${this.shipping}&shipcost=${this.shipcost}`).then((response) => {
                 if (response.status === 200) {
                     this.$router.push({
                         name: "adminsettings",
@@ -93,7 +94,9 @@ export default {
         this.storeId = this.getStoreId;
         axiosInstance.get(`/store/get/${this.storeId}`).then((response) => {
             if (response.status === 200) {
-                this.shipping = response.data.shipping
+                this.pickup=response.data.pickup
+                this.shipping=response.data.shipping
+                this.shipcost=response.data.shipcost
             }
         });
     },

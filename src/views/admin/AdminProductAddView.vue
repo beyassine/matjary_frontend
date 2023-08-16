@@ -122,19 +122,37 @@
                   v-model="description" :readonly="loading"></v-textarea>
               </v-card-item>
               <v-card-item class="">
+                <h3 class="mb-3">التصنيف</h3>
+                <v-select label="" :items="categories" item-title="name" item-value="name" v-model="categorie"></v-select>
+              </v-card-item>
+              <v-card-item class="">
                 <h3 class="mb-3">سعر المنتج</h3>
                 <v-text-field append-inner-icon="mdi-tag" placeholder="0.00" variant="outlined" type="number"
                   v-model="unitprice" :readonly="loading" :rules="required"></v-text-field>
               </v-card-item>
-              <v-card-item class="d-flex justify-end">
+              <v-card-item class="">
+                <h3 class="mb-3">الخيارات</h3>
                 <v-row>
-                  <v-col cols="3">
-                    <v-switch color="green" v-model="freeshipping"></v-switch>
+                  <v-col cols="6">
+                    <h5 class="mb-3">الثمن</h5>
+                    <v-text-field append-inner-icon="mdi-tag" placeholder="" variant="outlined"
+                      v-model="newItemCost"></v-text-field>
                   </v-col>
-                  <v-col cols="9">
-                    <h3 class="mt-3">شحن مجاني للمنتج</h3>
+                  <v-col cols="6">
+                    <h5 class="mb-3">الإسم</h5>
+                    <v-text-field append-inner-icon="mdi-pencil" placeholder="" variant="outlined"
+                      v-model="newItemName"></v-text-field>
                   </v-col>
                 </v-row>
+                <v-btn color="blue-lighten-1" size="large" variant="elevated" class="text-h5" @click="addOption">
+                  أضف
+                </v-btn>
+                <ul>
+                  <li v-for="(item, index) in options" :key="index">
+                    <button @click="deleteOption(index)">Delete</button>
+                    {{ item.name }} - {{ item.cost }}
+                  </li>
+                </ul>
               </v-card-item>
               <v-card-actions>
                 <v-btn :disabled="!form" :loading="loading" block color="green-lighten-1" size="large" type="submit"
@@ -170,10 +188,12 @@ export default {
     return {
       storeId: "",
       userId: "",
+      categories: '',
       form: false,
       // product
       title: "",
       description: '',
+      categorie: '',
       unitprice: "",
       loading: false,
       required: [(v) => !!v || "لا يجوز أن يُترَك هذا الحقل فارغًا"],
@@ -186,17 +206,37 @@ export default {
       images: ['', '', '', '', ''],
       img_changes: [false, false, false, false, false],
       img_uploading: [false, false, false, false, false],
-      // Shipping
-      freeshipping: false,
+      //Options
+      newItemName: "",
+      newItemCost: 0,
+      options: [],
 
     };
   },
 
   computed: {
     ...mapGetters(["getUserId", "getStoreId"]),
+    optionsList() {
+      return this.options.map(item =>  ({
+        'name': item.name.toString(),
+        'cost': item.cost.toString(),
+      }));
+    },
   },
 
   methods: {
+    addOption() {
+      this.options.push({
+        name: this.newItemName,
+        cost: parseFloat(this.newItemCost),
+      });
+      console.log(this.optionsList)
+      this.newItemName = "";
+      this.newItemCost = 0;
+    },
+    deleteOption(index) {
+      this.options.splice(index, 1);
+    },
     async getUrl() {
       try {
         const response = await axiosInstance.post(`/store/${this.storeId}/images/geturl`);
@@ -235,11 +275,13 @@ export default {
         store_id: this.storeId,
         user_id: this.userId,
         productname: this.title,
+        categorie: this.categorie,
+        options:this.optionsList,
         description: this.description,
         unitprice: this.unitprice.toString(),
         images: this.images,
-        freeshipping: this.freeshipping,
       };
+      console.log(fd)
       this.loading = true;
       axiosInstance.post(`/product/create`, fd).then((response) => {
         if (response.status === 200) {
@@ -254,6 +296,11 @@ export default {
   created() {
     this.userId = this.getUserId;
     this.storeId = this.getStoreId;
+    axiosInstance
+      .get(`/store/getcategories/${this.storeId}`)
+      .then((response) => {
+        this.categories = response.data;
+      })
   },
 };
 </script>

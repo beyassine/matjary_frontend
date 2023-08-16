@@ -43,8 +43,9 @@ export default {
     return {
       storeId: this.$route.params.storeId,
       adminlinks: [
-        ["mdi-package-variant-closed", "المنتجات", "adminproducts"],
         ["mdi-clipboard-text-outline", "الطلبات", "adminorders"],
+        ["mdi-package-variant-closed", "المنتجات", "adminproducts"],
+        ["mdi-format-list-bulleted-square", "التصنيفات", "admincategories"],
         ["mdi-cog-outline", "الإعدادات", "adminsettings"],
       ],
     };

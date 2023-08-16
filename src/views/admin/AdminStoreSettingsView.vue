@@ -15,6 +15,7 @@
                 <h3>
                   رابط المتجر<v-icon class="ml-2">mdi-link</v-icon>
                 </h3>
+                <v-divider class="ma-3"></v-divider>
               </div>
               <div class="d-flex justify-center">
                 <h3>https://matjary.app/{{storeId}}</h3>
@@ -40,6 +41,7 @@
                 <h3>
                   شعار المتجر<v-icon class="ml-2">mdi-image-outline</v-icon>
                 </h3>
+                <v-divider class="ma-3"></v-divider>
               </div>
               <div class="d-flex justify-center">
                 <v-avatar size="100">
@@ -72,32 +74,56 @@
                 <h3>
                   معلومات الشحن<v-icon class="ml-2">mdi-truck-outline</v-icon>
                 </h3>
+                <v-divider class="ma-3"></v-divider>
               </div>
-              <div class="text-grey text-right">
-                <v-table>
-                  <thead>
-                    <tr>
-                      <th class="text-right">
-                        الثمن
-                      </th>
-                      <th class="text-right">
-                        المدينة
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="item in shipping" :key="item.city">
-                      <td>{{ item.cost }}</td>
-                      <td>{{ item.city }}</td>
-                    </tr>
-                  </tbody>
-                </v-table>
+              <div class=" text-right">                
+                <h3 class="mt-3">الاستلام من المتجر <v-icon :icon="this.pickup? 'mdi-check' :'mdi-close' "></v-icon> </h3>
+                <h3 class="mt-3">شحن و توصيل <v-icon :icon="this.shipping? 'mdi-check' :'mdi-close' "></v-icon> </h3>
+                <v-row class="mr-5 mt-3">
+                    <v-col cols="6">
+                      <h3>  د.م  {{ shipcost }}</h3>
+                    </v-col>
+                    <v-col cols="6">
+                        <h3 class="">ثمن الشحن </h3>
+                    </v-col>
+                    </v-row>  
               </div>
             </div>
           </v-card-item>
           <v-card-actions class="d-flex justify-center">
             <router-link class="text-decoration-none text-grey-darken-4" :to="{
               name: 'adminshipping',
+            }">
+              <v-btn class="ml-2" variant="flat" size="large" color="teal-lighten-1">
+                <h4>تعديل<v-icon class="ml-2">mdi-pencil-outline</v-icon></h4>
+              </v-btn>
+            </router-link>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+      <v-col :cols="$vuetify.display.mdAndUp ? '6' : '12'">
+        <v-card class="mx-auto text-right">
+          <v-card-item>
+            <div>
+              <div class="mb-3">
+                <h3>
+                  معلومات التواصل<v-icon class="ml-2">mdi-truck-outline</v-icon>
+                </h3>
+                <v-divider class="ma-3"></v-divider>
+              </div>
+              <div class=" text-right">                
+                <h3 class="mt-3">الهاتف <v-icon icon="mdi-phone-in-talk-outline"></v-icon> </h3>
+                <h4>{{ this.telephone }}</h4>
+                <h3 class="mt-3">واتساب <v-icon icon="mdi-whatsapp"></v-icon> </h3>
+                <h4>{{ this.whatsapp }}</h4>
+                <h3 class="mt-3">العنوان <v-icon icon="mdi-map-marker-radius-outline"></v-icon> </h3>
+                <h4>{{ this.maps }}</h4>
+              </div>
+            </div>
+          </v-card-item>
+          <v-card-actions class="d-flex justify-center">
+            <router-link class="text-decoration-none text-grey-darken-4" :to="{
+              name: 'admininfo',
             }">
               <v-btn class="ml-2" variant="flat" size="large" color="teal-lighten-1">
                 <h4>تعديل<v-icon class="ml-2">mdi-pencil-outline</v-icon></h4>
@@ -133,11 +159,13 @@ export default {
       adress: "",
       telephone: "",
       whatsapp: "",
-      instagram: "",
+      maps: "",
       facebook: "",
+      pickup:"",
       shipping: "",
       shipcost: "",
       logo: "",
+
     };
   },
 
@@ -177,7 +205,13 @@ export default {
       if (response.status === 200) {
         this.storename = response.data.storename;
         this.logo = response.data.logo;
+        this.pickup = response.data.pickup
         this.shipping = response.data.shipping
+        this.shipcost = response.data.shipcost
+        this.telephone=response.data.telephone
+        this.whatsapp=response.data.whatsapp
+        this.maps=response.data.maps
+
       }
     });
   },

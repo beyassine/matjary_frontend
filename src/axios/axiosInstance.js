@@ -6,13 +6,13 @@ const refreshToken = (refresh_token) => {
     var refresh_url=`https://matjaryapi.online/user/refresh?token=${refresh_token}`
     var refresh_localurl=`http://127.0.0.1:8000/user/refresh?token=${refresh_token}`
     const payload = {
-        token: refresh_url
+        token: refresh_localurl
     }
     const headers = {
         'Content-Type': 'application/json'
     }
     return new Promise((resolve, reject) => {
-        return axios.post(refresh_url, { headers: headers }).then((response) => {
+        return axios.post(refresh_localurl, { headers: headers }).then((response) => {
             resolve(response)
         }).catch((error) => {
             reject(error)
@@ -25,7 +25,7 @@ var localbase = 'http://127.0.0.1:8000'
 
 
 const axiosInstance = axios.create({
-    baseURL: base,
+    baseURL: localbase,
 });
 
 axiosInstance.interceptors.request.use((req) => {

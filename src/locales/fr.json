@@ -1,0 +1,14 @@
+{
+  "currency": {
+    "DH": "DH"
+  },
+  "store": {
+    "add_to_cart": "Ajouter au Panier",
+    "no_products_available": "Aucun Produit",
+    "products": "Produits",
+    "cart": "Mon Panier"
+  },
+  "cart": {
+    "cart": "Mon Panier"
+  }
+}

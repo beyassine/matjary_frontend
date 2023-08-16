@@ -9,28 +9,28 @@ const getters = {
 };
 
 const actions = {
-    checkCart(context) {
-        var cart = Cookies.get('cart')
+    checkCart(context, storeId) {
+        var cart = Cookies.get('cart_'+storeId)
         if (cart == undefined) {
             cart = {}
-            Cookies.set('cart', JSON.stringify(cart))
+            Cookies.set('cart_'+storeId, JSON.stringify(cart))
             context.commit('setCart', false);
         }
-        else{
-            var jsoncart= JSON.parse(cart)
-            if (Object.keys(jsoncart).length == 0){                
-                context.commit('setCart', false);
+        else {
+            var jsoncart = JSON.parse(cart)
+            if(Object.keys(jsoncart).length == 0){
+                context.commit('setCart', false);        
             }
-            else{                
+            else{
                 context.commit('setCart', true);
             }
         }
 
     },
-    setiscart(context){
+    setiscart(context) {
         context.commit('setCart', true);
     },
-    removeiscart(context){
+    removeiscart(context) {
         context.commit('setCart', false);
     }
 };

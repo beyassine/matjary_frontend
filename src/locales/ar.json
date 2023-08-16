@@ -1,0 +1,14 @@
+{
+    "currency": {
+        "DH": "د.م"
+    },
+    "store": {
+        "add_to_cart": "أضف إلى السلة",
+        "no_products_available": "لا يوجد أي منتج",
+        "products": "المنتجات",
+        "cart": "سلة التسوق"
+    },
+    "cart": {
+        "cart": "سلة التسوق"
+    }
+}

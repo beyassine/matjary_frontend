@@ -129,7 +129,7 @@ export default {
         .then(() => {
           this.loading = false;
           this.$router.push({
-            name: "adminproducts",
+            name: "adminorders",
           })
         })
         .catch((err) => {
