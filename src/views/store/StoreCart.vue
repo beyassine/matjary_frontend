@@ -14,26 +14,9 @@
                 </router-link>
             </div>
         </div>
-        <div class=" d-flex align-center justify-center mt-3">
-            <div class="text-decoration-none text-black  ma-3 pa-3">
-                <a :href="'tel:+' + this.telephone.replace(/\s/g, '')">
-                    <v-icon class="mb-1" color="grey-darken-3" icon="mdi-phone-in-talk-outline" size="35"></v-icon>
-                </a>
-            </div>
-            <div class="text-center text-decoration-none text-black  ma-3 pa-3">
-                <a target="_blank" :href="'https://wa.me/' + this.whatsapp.replace(/\s/g, '')">
-                    <v-icon class="mb-1" color="grey-darken-3" icon="mdi-whatsapp" size="35"></v-icon>
-                </a>
-            </div>
-            <div class="text-center text-decoration-none text-black ma-3 pa-3">
-                <a target="_blank" :href="this.maps">
-                    <v-icon class="mb-1" color="grey-darken-3" icon="mdi-map-marker-radius-outline" size="35"></v-icon>
-                </a>
-            </div>
-        </div>
     </div>
 
-    <v-divider class="mb-5"></v-divider>
+    <v-divider class="mb-5 mt-5"></v-divider>
 
     <div :class="$vuetify.display.smAndUp ? 'homecontainer-lg bg-white' : 'homecontainer-sm bg-white'">
         <h1 class="text-center mb-5">سلة التسوق</h1>
