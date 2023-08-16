@@ -108,10 +108,10 @@
                                 <v-btn block color="green-darken-1" size="large" variant="elevated"
                                     :loading="order.validloading" @click="validateOrder(order)" class="text-white mt-3">
                                     <h4>تأكيد الطلب </h4>
-                                    <v-icon class="ml-2">mdi-whatsapp</v-icon>
+                                    <v-icon class="ml-2">mdi-check</v-icon>
                                 </v-btn>
                             </v-col>
-                            <v-col v-if="order.orderstatus == 'valid'" cols="12">
+                            <v-col  cols="12">
                                 <a class="text-decoration-none text-white" target="_blank"
                                     :href="'https://wa.me/' + order.phone.replace(/\s/g, '')">
                                     <v-btn block color="grey" size="large" variant="elevated" class="text-white mt-3">

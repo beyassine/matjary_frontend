@@ -139,50 +139,56 @@
                     <v-divider class="mb-3"></v-divider>
                     <div class="d-flex justify-space-between ma-5">
                         <h3 class="text-left">
-                        Total Produits :
+                            Total Produits :
                         </h3>
                         <h3 class="text-left">
-                        {{ total_products.toFixed(2) }} DH
+                            {{ total_products.toFixed(2) }} DH
                         </h3>
                     </div>
                     <div v-if="this.shippingoption == 'delivery'" class="d-flex justify-space-between ma-5">
                         <h3 class="text-left">
-                        Prix Livraison :
+                            Prix Livraison :
                         </h3>
                         <h3 class="text-left">
-                        {{ total_shipping.toFixed(2) }} DH
+                            {{ total_shipping.toFixed(2) }} DH
                         </h3>
                     </div>
                     <v-divider class="mb-3"></v-divider>
                     <div class="d-flex justify-space-between ma-5">
                         <h2 class="text-left">
-                        {{ total_order.toFixed(2) }} DH
+                            Prix Total :
                         </h2>
                         <h2 class="text-left">
-                            Prix Total :
+                            {{ total_order.toFixed(2) }} DH
                         </h2>
                     </div>
                     <v-card-actions class="mb-5">
                         <v-btn block color="green-darken-1" size="large" variant="elevated" class="text-h6 text-white mt-5"
                             @click="addOrder" :disabled="validform" :loading="loading">
-                            Commander par Whatsapp
-                            <v-icon class="ml-2">mdi-whatsapp</v-icon>
+                            Commander
                         </v-btn>
                     </v-card-actions>
-                    <a ref="whatsappbtn" :href="whatsapplink" class="d-none">
-                        <v-btn block color="green-lighten-1" size="large" variant="elevated" class="mt-5 text-h4">
-                            <h4></h4>
-                            <v-icon class="ml-2">mdi-whatsapp</v-icon>
-                        </v-btn>
-                    </a>
                 </v-form>
             </v-col>
         </v-row>
     </div>
+    <v-dialog class="dialog" v-model="dialog" width="90%">
+        <v-card class="text-center d-flex justify-center">
+            <v-card-text class="mb-2">
+                <h2><v-icon color="green">mdi-check-circle-outline</v-icon></h2>
+                <h3>Commande ajoutée avec succés</h3>
+            </v-card-text>
+            <a ref="whatsappbtn" :href="whatsapplink" class="text-decoration-none ma-3">
+                <v-btn block color="green-lighten-1" size="large" variant="elevated" class="text-h6 text-white">
+                    Envoyer par Whatsapp
+                    <v-icon class="ml-2">mdi-whatsapp</v-icon>
+                </v-btn>
+            </a>
+        </v-card>
+    </v-dialog>
 </template>
   
 <script>
-import { useI18n } from 'vue-i18n'
 import axios from "axios";
 import Cookies from 'js-cookie'
 
@@ -208,11 +214,14 @@ export default {
     data() {
         return {
             storeId: this.$route.params.storeId,
+            orderId: '',
             src1: imagevoid,
             src2: storevoid,
             storename: '',
             logo: '',
             whatsapp: '',
+            telephone: '',
+            maps: '',
             pickup: true,
             shipping: true,
             shipcost: '',
@@ -313,7 +322,9 @@ export default {
             } else {
                 link += 'Livraison' + "%0a"
             }
-            link += 'Total' + ": " + this.total_order +' DH'
+            link += 'Total' + ": " + this.total_order + ' DH' + "%0a"
+
+            link += "%0a" + 'https://www.matjary.app/orders/' + this.orderId
 
             return link
         },
@@ -389,6 +400,7 @@ export default {
             Cookies.set(("cart_" + this.storeId), JSON.stringify(this.products))
         },
         addOrder() {
+            this.loading = true
             this.getPhone()
             const fd = {
                 user_id: this.storeId,
@@ -398,17 +410,17 @@ export default {
                 shippingoption: this.shippingoption,
                 orderstatus: 'enregistred',
                 shipcost: this.total_shipping,
-                total_products:this.total_products,
+                total_products: this.total_products,
                 total_order: this.total_order,
             }
-            console.log(fd)
             axios
                 .post(`/order/create`, fd)
                 .then((response) => {
                     console.log(response)
                     if (response.status === 200) {
-                        Cookies.set(("cart_" + this.storeId),JSON.stringify({}))
-                        this.$refs.whatsappbtn.click()
+                        Cookies.set(("cart_" + this.storeId), JSON.stringify({}))
+                        this.orderId = response.data.id
+                        this.dialog = true
                         this.loading = false
                     }
                 });

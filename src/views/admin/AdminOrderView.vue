@@ -108,21 +108,21 @@
                     </v-card>
                     <v-card-item>
                         <v-row>
-                            <v-col v-if="order.orderstatus == 'enregistred'" cols="12">
-                                <v-btn block color="green-darken-1" size="large" variant="elevated"
-                                    :loading="order.validloading" @click="validateOrder(order)" class="text-white mt-3">
-                                    <h4>تأكيد الطلب </h4>
-                                    <v-icon class="ml-2">mdi-whatsapp</v-icon>
-                                </v-btn>
-                            </v-col>
-                            <v-col v-if="order.orderstatus == 'valid'" cols="12">
+                            <v-col  cols="12">
                                 <a class="text-decoration-none text-white" target="_blank"
                                     :href="'https://wa.me/' + order.phone.replace(/\s/g, '')">
-                                    <v-btn block color="grey" size="large" variant="elevated" class="text-white mt-3">
+                                    <v-btn block color="grey" size="large" variant="elevated" class="text-white mt-2">
                                         <h4>ابعث واتساب</h4>
                                         <v-icon class="ml-2">mdi-whatsapp</v-icon>
                                     </v-btn>
                                 </a>
+                            </v-col>
+                            <v-col v-if="order.orderstatus == 'enregistred'" cols="12">
+                                <v-btn block color="green-darken-1" size="large" variant="elevated"
+                                    :loading="order.validloading" @click="validateOrder(order)" class="text-white">
+                                    <h4>تأكيد الطلب </h4>
+                                    <v-icon class="ml-2">mdi-check</v-icon>
+                                </v-btn>
                             </v-col>
                         </v-row>
                     </v-card-item>
@@ -200,7 +200,7 @@ export default {
         },
         validateOrder(order, index) {
             order.validloading = true
-            this.whatsapplink = 'https://wa.me/' + order.phone.replace(/\s/g, '') + "?text=" + "مرحبًا لقد تم تأكيد طلبكم " + ":" + "%0a" + "%0a" + "- " + order.products.name + "%0a" + "- " + "الكمية" + ": " + order.products.quantity + "%0a" + "- " + "المدينة" + ": " + order.shipcity + "%0a" + "- " + "الثمن الإجمالي" + ": " + order.total_order + "د.م" + "%0a" + "%0a" + "شكرا"
+            this.whatsapplink = 'https://wa.me/' + order.phone.replace(/\s/g, '') + "?text=" + "مرحبًا لقد تم تأكيد طلبكم " 
             axiosInstance.post(`/order/validate/${order.id}/${this.storeId}`).then((response) => {
                 if (response.status === 200) {
                     this.$refs.whatsappbtn.click()

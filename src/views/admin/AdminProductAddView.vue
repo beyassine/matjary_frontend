@@ -281,7 +281,6 @@ export default {
         unitprice: this.unitprice.toString(),
         images: this.images,
       };
-      console.log(fd)
       this.loading = true;
       axiosInstance.post(`/product/create`, fd).then((response) => {
         if (response.status === 200) {

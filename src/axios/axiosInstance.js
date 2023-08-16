@@ -25,7 +25,7 @@ var localbase = 'http://127.0.0.1:8000'
 
 
 const axiosInstance = axios.create({
-    baseURL: base,
+    baseURL: localbase,
 });
 
 axiosInstance.interceptors.request.use((req) => {

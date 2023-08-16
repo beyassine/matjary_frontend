@@ -130,16 +130,6 @@
                                 <v-text-field append-inner-icon="mdi-tag" placeholder="0.00" variant="outlined"
                                     type="number" v-model="unitprice" :readonly="loading" :rules="required"></v-text-field>
                             </v-card-item>
-                            <v-card-item class="d-flex justify-end">
-                                <v-row>
-                                    <v-col cols="3">
-                                        <v-switch color="green" v-model="freeshipping"></v-switch>
-                                    </v-col>
-                                    <v-col cols="9">
-                                        <h3 class="mt-3">شحن مجاني للمنتج</h3>
-                                    </v-col>
-                                </v-row>
-                            </v-card-item>
                             <v-card-actions>
                                 <v-btn :disabled="!form" :loading="loading" block color="blue-grey" size="large"
                                     type="submit" variant="elevated" class="text-h5">

@@ -14,9 +14,27 @@
                 </router-link>
             </div>
         </div>
+        <div class=" d-flex align-center justify-center mt-3">
+            <div class="ma-3 pa-3">
+                <a class="text-decoration-none text-black " :href="'tel:+' + this.telephone.replace(/\s/g, '')">
+                    <v-icon class="mb-1" color="grey-darken-3" icon="mdi-phone-in-talk-outline" size="35"></v-icon>
+                </a>
+            </div>
+            <div class="ma-3 pa-3">
+                <a class="text-center text-decoration-none text-black" target="_blank"
+                    :href="'https://wa.me/' + this.whatsapp.replace(/\s/g, '')">
+                    <v-icon class="mb-1" color="grey-darken-3" icon="mdi-whatsapp" size="35"></v-icon>
+                </a>
+            </div>
+            <div class="ma-3 pa-3">
+                <a class="text-center text-decoration-none text-black" target="_blank" :href="this.maps">
+                    <v-icon class="mb-1" color="grey-darken-3" icon="mdi-map-marker-radius-outline" size="35"></v-icon>
+                </a>
+            </div>
+        </div>
     </div>
 
-    <v-divider class="mb-5 mt-5"></v-divider>
+    <v-divider class="mb-5"></v-divider>
 
     <div :class="$vuetify.display.smAndUp ? 'homecontainer-lg bg-white' : 'homecontainer-sm bg-white'">
         <h1 class="text-center mb-5">سلة التسوق</h1>
@@ -154,24 +172,36 @@
                     <v-card-actions class="mb-5">
                         <v-btn block color="green-darken-1" size="large" variant="elevated" class="text-h5 text-white mt-5"
                             @click="addOrder" :disabled="validform" :loading="loading">
-                            أطلب عبر واتساب
-                            <v-icon class="ml-2">mdi-whatsapp</v-icon>
+                            أضف طلبك
                         </v-btn>
                     </v-card-actions>
-                    <a ref="whatsappbtn" :href="whatsapplink" class="d-none">
-                        <v-btn block color="green-lighten-1" size="large" variant="elevated" class="mt-5 text-h4">
-                            <h4>إبعث طلبك عبر الواتساب</h4>
-                            <v-icon class="ml-2">mdi-whatsapp</v-icon>
+                    <v-card-actions class="mb-5">
+                        <v-btn block color="green-darken-1" size="large" variant="elevated" class="text-h5 text-white mt-5"
+                            @click="this.dialog = true">
+                            tet
                         </v-btn>
-                    </a>
+                    </v-card-actions>
                 </v-form>
             </v-col>
         </v-row>
     </div>
+    <v-dialog class="dialog" v-model="dialog" width="90%">
+        <v-card class="text-center d-flex justify-center">
+            <v-card-text class="mb-2">
+                <h2 class="mb-3"><v-icon color="green">mdi-check-circle-outline</v-icon></h2>
+                <h3>تم إضافة طلبكم بنجاح</h3>
+            </v-card-text>
+            <a ref="whatsappbtn" :href="whatsapplink" class="text-decoration-none ma-3">
+                <v-btn block color="green-lighten-1" size="large" variant="elevated" class="text-h6 text-white">
+                    إبعث عبر الواتساب
+                    <v-icon class="ml-2">mdi-whatsapp</v-icon>
+                </v-btn>
+            </a>
+        </v-card>
+    </v-dialog>
 </template>
   
 <script>
-import { useI18n } from 'vue-i18n'
 import axios from "axios";
 import Cookies from 'js-cookie'
 
@@ -197,11 +227,14 @@ export default {
     data() {
         return {
             storeId: this.$route.params.storeId,
+            orderId: '',
             src1: imagevoid,
             src2: storevoid,
             storename: '',
             logo: '',
             whatsapp: '',
+            telephone: '',
+            maps: '',
             pickup: true,
             shipping: true,
             shipcost: '',
@@ -302,7 +335,9 @@ export default {
             } else {
                 link += 'شحن و توصيل' + "%0a"
             }
-            link += 'Total' + ": " + this.total_order +' DH'
+            link += 'Total' + ": " + this.total_order + ' DH' + "%0a"
+
+            link += "%0a" + 'https://www.matjary.app/orders/' + this.orderId
 
             return link
         },
@@ -378,6 +413,7 @@ export default {
             Cookies.set(("cart_" + this.storeId), JSON.stringify(this.products))
         },
         addOrder() {
+            this.loading = true
             this.getPhone()
             const fd = {
                 user_id: this.storeId,
@@ -387,17 +423,16 @@ export default {
                 shippingoption: this.shippingoption,
                 orderstatus: 'enregistred',
                 shipcost: this.total_shipping,
-                total_products:this.total_products,
+                total_products: this.total_products,
                 total_order: this.total_order,
             }
-            console.log(fd)
             axios
                 .post(`/order/create`, fd)
                 .then((response) => {
-                    console.log(response)
                     if (response.status === 200) {
-                        Cookies.set(("cart_" + this.storeId),JSON.stringify({}))
-                        this.$refs.whatsappbtn.click()
+                        Cookies.set(("cart_" + this.storeId), JSON.stringify({}))
+                        this.orderId = response.data.id
+                        this.dialog = true
                         this.loading = false
                     }
                 });
@@ -419,6 +454,8 @@ export default {
                 this.shipcost = response.data.shipcost
                 this.pickup = response.data.pickup
                 this.whatsapp = response.data.whatsapp
+                this.telephone = response.data.telephone
+                this.maps = response.data.maps
             })
             .catch((err) => { });
 
