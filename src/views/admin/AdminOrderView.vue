@@ -225,7 +225,6 @@ export default {
         axiosInstance
             .get(`/order/getbyuser/${this.storeId}`)
             .then((response) => {
-                console.log(response.data)
                 this.orders = response.data;
             })
             .catch((err) => { });
