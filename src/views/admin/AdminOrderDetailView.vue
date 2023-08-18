@@ -17,7 +17,7 @@
                 </a>
             </v-col>
             <v-col :cols="$vuetify.display.smAndUp ? '8' : '12'">
-                <v-card class="mx-auto text-right">
+                <v-card v-if="order !== ''" class="mx-auto text-right">
                     <v-card-item>
                         <v-card-text>
                             <v-chip class="ma-2" :color="getstatus(order.orderstatus).color">
@@ -111,7 +111,7 @@
                                     <v-icon class="ml-2">mdi-check</v-icon>
                                 </v-btn>
                             </v-col>
-                            <v-col  cols="12">
+                            <v-col cols="12">
                                 <a class="text-decoration-none text-white" target="_blank"
                                     :href="'https://wa.me/' + order.phone.replace(/\s/g, '')">
                                     <v-btn block color="grey" size="large" variant="elevated" class="text-white mt-3">
@@ -123,12 +123,14 @@
                         </v-row>
                     </v-card-item>
                 </v-card>
+                <h3 v-if="order == ''" class="text-center"><v-icon size="60">mdi-shopping-search-outline</v-icon></h3>
             </v-col>
         </v-row>
     </v-container>
 </template>
   
 <script>
+import { mapGetters } from "vuex";
 import { format } from "date-fns";
 import axiosInstance from "../../axios/axiosInstance";
 import { useDisplay } from "vuetify";
@@ -142,13 +144,16 @@ export default {
 
     data() {
         return {
+            storeId: "",
             orderId: this.$route.params.orderId,
             whatsapplink: '',
             order: '',
+            orderstatus: ''
         };
     },
 
     computed: {
+        ...mapGetters(["getUserId", "getStoreId"]),
     },
 
     methods: {
@@ -203,9 +208,12 @@ export default {
         },
     },
     created() {
+        this.userId = this.getUserId;
+        this.storeId = this.getStoreId;
         axiosInstance
             .get(`/order/get/${this.orderId}`)
             .then((response) => {
+                this.orderstatus = response.data.orderstatus
                 this.order = response.data;
             })
             .catch((err) => { });

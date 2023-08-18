@@ -178,7 +178,7 @@
                 <h2><v-icon color="green">mdi-check-circle-outline</v-icon></h2>
                 <h3>Commande ajoutée avec succés</h3>
             </v-card-text>
-            <a ref="whatsappbtn" :href="whatsapplink" class="text-decoration-none ma-3">
+            <a ref="whatsappbtn" :href="whatsapplink"  target="_blank" class="text-decoration-none ma-3">
                 <v-btn block color="green-lighten-1" size="large" variant="elevated" class="text-h6 text-white">
                     Envoyer par Whatsapp
                     <v-icon class="ml-2">mdi-whatsapp</v-icon>
