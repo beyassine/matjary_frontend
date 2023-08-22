@@ -16,12 +16,13 @@
         </div>
         <div class=" d-flex align-center justify-center mt-3">
             <div class="ma-3 pa-3">
-                <a  class="text-decoration-none text-black " :href="'tel:+' + this.telephone.replace(/\s/g, '')">
+                <a class="text-decoration-none text-black " :href="'tel:+' + this.telephone.replace(/\s/g, '')">
                     <v-icon class="mb-1" color="grey-darken-3" icon="mdi-phone-in-talk-outline" size="35"></v-icon>
                 </a>
             </div>
             <div class="ma-3 pa-3">
-                <a class="text-center text-decoration-none text-black" target="_blank" :href="'https://wa.me/' + this.whatsapp.replace(/\s/g, '')">
+                <a class="text-center text-decoration-none text-black" target="_blank"
+                    :href="'https://wa.me/' + this.whatsapp.replace(/\s/g, '')">
                     <v-icon class="mb-1" color="grey-darken-3" icon="mdi-whatsapp" size="35"></v-icon>
                 </a>
             </div>
@@ -53,7 +54,7 @@
                         <div class="d-flex flex-no-wrap align-center justify-end ma-1">
                             <div class="mr-2">
                                 <h3 class="text-right">{{ product.productname }}</h3>
-                                <h3 class="text-right text-green-darken-1 font-weight-bold mt-2 ml-2">
+                                <h3 class="text-right font-weight-bold mt-2 ml-2">
                                     {{ parseFloat(product.unitprice).toFixed(2) }} {{ $t('currency.DH') }}
                                 </h3>
                             </div>
@@ -71,8 +72,13 @@
         </v-row>
     </div>
     <div class="text-center">
-        <v-dialog class="dialog" v-model="dialog" width="90%">
-            <v-card>
+        <v-dialog class="dialog" v-model="dialog" fullscreen>
+            <v-card style="padding-bottom: 60px;">
+                <v-toolbar color="white" @click="dialog = false">
+                    <v-btn icon color="green" size="x-large" @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
                 <v-row style="padding: 20px;">
                     <v-col cols="12">
                         <v-img height="200px" :src="bigImage" />
@@ -81,37 +87,57 @@
                         <v-img v-if="image !== ''" height="80px" :src="image" @click="selectImage(index)" />
                     </v-col>
                 </v-row>
-                <v-card-text class="mb-2">
-                    <h2 class="mb-2 text-center">{{ modalProduct.productname }}</h2>
-                    <v-radio-group v-if="modalProduct.options.length > 0" v-model="modalOption">
+                <v-card-text class="d-flex align-center">
+                    <h2 class="">{{ modalProduct.productname }}</h2>
+                    <div class="d-flex justify-space-between">
+                        <v-btn class="text-green-darken-1" size="large" variant="text" @click="decrementCounter">
+                            <h2>-</h2>
+                        </v-btn>
+                        <h2 class="ma-2">{{ modalQuantity }}</h2>
+                        <v-btn class="text-green-darken-1" size="large" variant="text" @click="incrementCounter">
+                            <h2>+</h2>
+                        </v-btn>
+                    </div>
+                </v-card-text>
+                <v-card-text class="mb-2 text-left">
+                    <h2 v-if="!modalProduct.options || modalProduct.options.length == 0" class="text-green-darken-1 font-weight-bold">
+                        {{ parseFloat(modalProduct.unitprice).toFixed(2) }} {{ $t('currency.DH') }}
+                    </h2>
+                    <v-radio-group v-if="modalProduct.options && modalProduct.options.length > 0" v-model="modalOption">
                         <v-radio class="ml-2" color="green" v-for="option in modalProduct.options" :value="option">
                             <template v-slot:label>
                                 <h3>{{ option.name }} - <strong>{{ option.cost }} {{ $t('currency.DH') }}</strong></h3>
                             </template>
                         </v-radio>
                     </v-radio-group>
-                    <h3 v-if="modalProduct.options.length == 0" class="text-green-darken-1 font-weight-bold">
-                        {{ parseFloat(modalProduct.unitprice).toFixed(2) }} {{ $t('currency.DH') }}
-                    </h3>
                 </v-card-text>
-                <v-card-text class="d-flex flex-no-wrap justify-center mb-5">
-                    <div class="d-flex justify-space-between">
-                        <v-btn class="text-green-darken-1" size="large" variant="text" @click="decrementCounter">
-                            <h1>-</h1>
-                        </v-btn>
-                        <h2 class="ma-2">{{ modalQuantity }}</h2>
-                        <v-btn class="text-green-darken-1" size="large" variant="text" @click="incrementCounter">
-                            <h1>+</h1>
-                        </v-btn>
-                    </div>
-                </v-card-text>
-                <v-card-actions class="mb-5">
-                    <v-btn block color="green-lighten-1" size="large" variant="elevated" class="text-h6 text-white"
-                        @click="addModalproduct(modalProduct)">
-                        {{ $t('store.add_to_cart') }}
-                    </v-btn>
-                </v-card-actions>
+                <div v-if="modalProduct.addons && modalProduct.addons.length > 0">
+                    <v-card-text v-for="addon in modalProduct.addons">
+                        <v-divider class="mb-5"></v-divider>
+                        <h2 class="text-green mb-2">{{ addon.name }}</h2>
+                        <v-card-text v-for="option in addon.options"
+                            class="d-flex flex-no-wrap justify-space-between align-center">
+                            <h3> {{ option.name }} <span v-if="option.cost !== '0'" class="text-green">+ {{ option.cost
+                            }} {{ $t('currency.DH') }}</span></h3>
+                            <div class="d-flex align-center justify-space-between">
+                                <v-btn v-if="parseFloat(option.quantity) > 0" class="text-green-darken-1" size="large"
+                                    variant="text" @click="decrementadddon(addon, option)">
+                                    <h3>-</h3>
+                                </v-btn>
+                                <h2 v-if="parseFloat(option.quantity) > 0" class="">{{ option.quantity }}</h2>
+                                <v-btn class="text-green-darken-1" size="large" variant="text" :disabled="addon.disabled"
+                                    @click="incrementadddon(addon, option)">
+                                    <h2>+</h2>
+                                </v-btn>
+                            </div>
+                        </v-card-text>
+                    </v-card-text>
+                </div>
             </v-card>
+            <v-btn color="green-lighten-1" size="large" variant="elevated" class=" btn-float text-h6 text-white"
+                :disabled="!cartBtn" @click="addModalproduct(modalProduct)">
+                {{ $t('store.add_to_cart') }}
+            </v-btn>
         </v-dialog>
     </div>
     <v-bottom-navigation v-if="showCart" style="height: 70px;" elevation="0">
@@ -122,7 +148,8 @@
         <h3 class="text-center mt-2 mb-5">{{ $t('store.products') }}</h3>
         <v-divider class="mb-5"></v-divider>
         <v-card v-for="(product, index) in cart_products" :key="product.id" class="ma-2 " elevation="0">
-            <div v-if="Object.keys(this.cart_products[product.id]['options']).length == 0">
+            <div
+                v-if="Object.keys(this.cart_products[product.id]['options']).length == 0 && this.cart_products[product.id]['addons'].length == 0">
                 <div class="d-flex flex-no-wrap align-center justify-end ">
                     <div class="d-flex flex-no-wrap align-center justify-end ">
                         <div class="mr-2">
@@ -135,7 +162,7 @@
                         </v-avatar>
                     </div>
                 </div>
-                <div class="d-flex flex-no-wrap justify-space-between ma-2 ">
+                <div class="d-flex flex-no-wrap justify-space-between ma-1 ">
                     <div class="d-flex justify-space-between">
                         <v-btn class="text-green-darken-1" size="large" variant="text" @click="decrement(product)">
                             <h1>-</h1>
@@ -146,6 +173,7 @@
                         </v-btn>
                     </div>
                 </div>
+                <v-divider></v-divider>
             </div>
             <div v-if="Object.keys(this.cart_products[product.id]['options']).length > 0">
                 <div v-for="option in product.options">
@@ -178,11 +206,53 @@
                 </div>
                 <v-divider></v-divider>
             </div>
+            <div v-if="this.cart_products[product.id]['addons'].length > 0">
+                <div v-for="addon in product.addons">
+                    <div v-if="parseFloat(addon.total_product) > 0">
+                        <div class="d-flex flex-no-wrap align-center justify-end ">
+                            <div class="d-flex flex-no-wrap align-center justify-end ">
+                                <div class="mr-2">
+                                    <h3 class="text-right">{{ product.name }}</h3>
+                                    <div v-for="key in Object.keys(addon.options)">
+                                        <h4 class="">{{ key }} :</h4>
+                                        <div v-for="addonkey in Object.keys(addon.options[key]['addons'])">
+                                            <h4 v-if="addon.options[key]['addons'][addonkey]['quantity'] > 0"
+                                                class="text-left text-grey">
+                                                {{ addon.options[key]['addons'][addonkey]['quantity'] }} x {{ addonkey }}
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <h3 class="text-right text-green-darken-1 font-weight-bold mt-2 ml-2">{{
+                                        parseFloat(addon.total_product).toFixed(2) }} {{ $t('currency.DH') }}
+                                    </h3>
+                                </div>
+                                <v-avatar class="ma-1" size="50" rounded="0">
+                                    <v-img :src="product.img"></v-img>
+                                </v-avatar>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-no-wrap justify-space-between ma-2 ">
+                            <div class="d-flex justify-space-between">
+                                <v-btn class="text-green-darken-1" size="large" variant="text"
+                                    @click="decrementcartaddon(addon)">
+                                    <h1>-</h1>
+                                </v-btn>
+                                <h2 class="ma-2">{{ addon.quantity }}</h2>
+                                <v-btn class="text-green-darken-1" size="large" variant="text"
+                                    @click="incrementcartaddon(addon)">
+                                    <h1>+</h1>
+                                </v-btn>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <v-divider></v-divider>
+            </div>
         </v-card>
         <template v-slot:append>
             <div class="pa-2">
                 <v-divider></v-divider>
-                <h3 class="ma-3 text-center">{{ total_products }} {{ $t('currency.DH') }}</h3>
+                <h3 class="ma-3 text-center">{{ parseFloat(total_products).toFixed(2) }} {{ $t('currency.DH') }}</h3>
                 <router-link class="text-decoration-none d-flex justify-center" :to="{
                     name: this.storeCartName,
                     params: { storeId: this.storeId }
@@ -238,6 +308,7 @@ export default {
             dialog: false,
             modalProduct: '',
             modalOption: '',
+            modalAddons: {},
             modalQuantity: 1,
             filteredImages: '',
             selectedItem: 0,
@@ -279,6 +350,11 @@ export default {
                         total += parseFloat(this.cart_products[product]['options'][option]['total_product'])
                     }
                 }
+                else if (this.cart_products[product]['addons'].length > 0) {
+                    for (const addon in this.cart_products[product]['addons']) {
+                        total += parseFloat(this.cart_products[product]['addons'][addon]['total_product'])
+                    }
+                }
                 else {
                     total += parseFloat(this.cart_products[product]['total_product'])
                 }
@@ -296,6 +372,20 @@ export default {
         },
         storeCartName() {
             return this.lang + 'storecart'
+        },
+        cartBtn() {
+            if (this.modalProduct.addons) {
+                return this.modalProduct.addons.every(addon => {
+                    if (parseFloat(addon.quantity) == 0) {
+                        return true
+                    } else {
+                        return addon.disabled
+                    }
+                });
+
+            } else {
+                return true
+            }
         }
     },
 
@@ -307,9 +397,15 @@ export default {
         },
 
         showProduct(product) {
-            this.modalProduct = product
-            if (product.options.length > 0) {
+            this.modalProduct = JSON.parse(JSON.stringify(product));
+            this.modalQuantity = 1
+            if (product.options && product.options.length > 0) {
                 this.modalOption = product.options[0]
+            }
+            this.modalAddons = {
+                options: {},
+                total_addons: 0,
+                total_product: 0
             }
             this.filteredImages = product.images.filter(url => url !== '');
             this.selectedItem = 0
@@ -326,10 +422,11 @@ export default {
                     name: this.modalProduct.productname,
                     img: this.modalProduct.images[0],
                     options: {},
+                    addons: [],
                 };
             }
             // Check if product has options
-            if (this.modalProduct.options.length > 0) {
+            if (this.modalProduct.options && this.modalProduct.options.length > 0) {
                 // Check if the product with the same option already exists in the cart
                 if (this.cart_products[this.modalProduct.id][this.modalOption.name]) {
                     // If the product with the same option already exists, update its quantity
@@ -344,15 +441,25 @@ export default {
                         total_product: parseFloat(this.modalOption.cost) * parseFloat(this.modalQuantity),
                     };
                 }
+            } else if (this.modalProduct.addons && this.modalProduct.addons.length > 0) {
+                // Check if product has addons
+                this.modalAddons['quantity'] = this.modalQuantity
+                this.modalAddons['price'] = this.modalProduct.unitprice
+                this.modalAddons['total_product'] = parseFloat(this.modalQuantity) * (parseFloat(this.modalProduct.unitprice) + parseFloat(this.modalAddons['total_addons']))
+                this.cart_products[this.modalProduct.id]['addons'].push(this.modalAddons)
+
+
             } else {
                 this.cart_products[this.modalProduct.id]['quantity'] = this.modalQuantity
                 this.cart_products[this.modalProduct.id]['price'] = this.modalProduct.unitprice
                 this.cart_products[this.modalProduct.id]['total_product'] = parseFloat(this.modalProduct.unitprice) * parseFloat(this.modalQuantity)
             }
+
             this.saveCartInCookies()
             this.setiscart()
-            this.modalQuantity = 1
             this.dialog = false
+            this.modalQuantity = 1
+            this.modalAddons = {}
         },
 
         increment(product) {
@@ -370,7 +477,6 @@ export default {
             }
             this.saveCartInCookies()
         },
-
         incrementoption(product, optionName) {
             product['options'][optionName].quantity += 1;
             product['options'][optionName].total_product = parseFloat(product['options'][optionName].quantity) * parseFloat(product['options'][optionName].price)
@@ -389,7 +495,76 @@ export default {
             }
             this.saveCartInCookies()
         },
+        incrementadddon(addon, option) {
+            if (!this.modalAddons['options'][addon.name]) {
+                this.modalAddons['options'][addon.name] = {}
+                this.modalAddons['options'][addon.name]['addons'] = {}
+                this.modalAddons['options'][addon.name]['ordered'] = 0
 
+            }
+
+            if (parseFloat(this.modalAddons['options'][addon.name]['quantity']) > 0 && parseFloat(this.modalAddons['options'][addon.name]['ordered']) >= parseFloat(this.modalAddons['options'][addon.name]['quantity'])) {
+                return
+            } else {
+                if (this.modalAddons['options'][addon.name]['addons'][option.name]) {
+                    option.quantity += 1
+                    this.modalAddons['options'][addon.name]['addons'][option.name] = {
+                        quantity: option.quantity,
+                        cost: option.cost,
+                        total: parseFloat(option.cost) * parseFloat(option.quantity)
+                    }
+                    this.modalAddons['options'][addon.name]['quantity'] = addon.quantity
+                    this.modalAddons['options'][addon.name]['ordered'] += 1
+                    this.modalAddons['total_addons'] += parseFloat(option.cost)
+                } else {
+                    option.quantity = 1
+                    this.modalAddons['options'][addon.name]['addons'][option.name] = {
+                        quantity: option.quantity,
+                        cost: option.cost,
+                        total: parseFloat(option.cost) * parseFloat(option.quantity)
+                    }
+                    this.modalAddons['options'][addon.name]['quantity'] = addon.quantity
+                    this.modalAddons['options'][addon.name]['ordered'] += 1
+                    this.modalAddons['total_addons'] += parseFloat(option.cost)
+                }
+            }
+            if (parseFloat(this.modalAddons['options'][addon.name]['quantity']) > 0 && parseFloat(this.modalAddons['options'][addon.name]['ordered']) >= parseFloat(this.modalAddons['options'][addon.name]['quantity'])) {
+                addon.disabled = true
+            } else {
+                addon.disabled = false
+            }
+        },
+        decrementadddon(addon, option) {
+            if (option.quantity > 0) {
+                option.quantity -= 1
+                this.modalAddons['options'][addon.name]['addons'][option.name] = {
+                    quantity: option.quantity,
+                    cost: option.cost,
+                    total: parseFloat(option.cost) * parseFloat(option.quantity)
+                }
+                this.modalAddons['options'][addon.name]['quantity'] = addon.quantity
+                this.modalAddons['options'][addon.name]['ordered'] -= 1
+                this.modalAddons['total_addons'] -= parseFloat(option.cost)
+            }
+            if (parseFloat(this.modalAddons['options'][addon.name]['quantity']) > 0 && parseFloat(this.modalAddons['options'][addon.name]['ordered']) >= parseFloat(this.modalAddons['options'][addon.name]['quantity'])) {
+                addon.disabled = true
+            } else {
+                addon.disabled = false
+            }
+
+        },
+        incrementcartaddon(addon) {
+            addon.quantity += 1;
+            addon.total_product = parseFloat(addon.quantity) * (parseFloat(addon.price) + parseFloat(addon.total_addons))
+            this.saveCartInCookies()
+        },
+        decrementcartaddon(addon) {
+            if (addon.quantity > 0) {
+                addon.quantity -= 1;
+                addon.total_product = parseFloat(addon.quantity) * (parseFloat(addon.price) + parseFloat(addon.total_addons))
+                this.saveCartInCookies()
+            }
+        },
         incrementCounter() {
             this.modalQuantity++
         },
@@ -467,6 +642,19 @@ export default {
     font-size: 35px;
     border-radius: 50px;
     box-shadow: 2px 2px 3px #999;
+}
+
+.btn-float {
+    position: fixed;
+    align-self: center;
+    width: 240px;
+    height: 60px;
+    bottom: 10px;
+    background-color: rgb(37, 211, 102);
+    color: #FFF;
+    font-size: 35px;
+    border-radius: 50px;
+    box-shadow: 1px 1px 2px #999;
 }
 
 .dialog .h3 {

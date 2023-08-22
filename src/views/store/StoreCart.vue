@@ -175,12 +175,6 @@
                             أضف طلبك
                         </v-btn>
                     </v-card-actions>
-                    <v-card-actions class="mb-5">
-                        <v-btn block color="green-darken-1" size="large" variant="elevated" class="text-h5 text-white mt-5"
-                            @click="this.dialog = true">
-                            tet
-                        </v-btn>
-                    </v-card-actions>
                 </v-form>
             </v-col>
         </v-row>

@@ -33,13 +33,11 @@
         <h1 class="text-center mb-5">Mon Panier</h1>
         <v-row class="d-flex flex-row-reverse mt-3">
             <v-col class="bg-grey-lighten-2 mb-5" :cols="$vuetify.display.smAndUp ? '6' : '12'">
-
                 <h2 class="text-left text-green-darken-1 mb-3"> Produits</h2>
-
                 <h2 v-if="products.length == 0" class="text-center">Aucun Produit</h2>
-
                 <v-card v-for="(product, index) in products" :key="product.id" class="ma-2 " elevation="0">
-                    <div v-if="Object.keys(this.products[product.id]['options']).length == 0">
+                    <div
+                        v-if="Object.keys(this.products[product.id]['options']).length == 0 && this.products[product.id]['addons'].length == 0">
                         <div class="d-flex flex-no-wrap align-center justify-end ">
                             <div class="d-flex flex-no-wrap align-center justify-end ">
                                 <div class="mr-2">
@@ -52,7 +50,7 @@
                         </div>
                         <div class="d-flex flex-no-wrap justify-space-between ma-2 ">
                             <h2 class="text-left text-green-darken-1 font-weight-bold mt-2 ml-2">
-                                {{ parseFloat(product.total_product).toFixed(2) }} د.م
+                                {{ parseFloat(product.total_product).toFixed(2) }} DH
                             </h2>
                             <div class="d-flex justify-space-between">
                                 <v-btn size="large" variant="text" @click="decrement(product)">
@@ -80,7 +78,7 @@
                             </div>
                             <div class="d-flex flex-no-wrap justify-space-between ma-2 ">
                                 <h2 class="text-left text-green-darken-1 font-weight-bold mt-2 ml-2">
-                                    {{ parseFloat(option.total_product).toFixed(2) }} د.م
+                                    {{ parseFloat(option.total_product).toFixed(2) }} DH
                                 </h2>
                                 <div class="d-flex justify-space-between">
                                     <v-btn size="large" variant="text" @click="decrementoption(product, option.name)">
@@ -91,6 +89,53 @@
                                         @click="incrementoption(product, option.name)">
                                         <h1>+</h1>
                                     </v-btn>
+                                </div>
+                            </div>
+                        </div>
+                        <v-divider></v-divider>
+                    </div>
+                    <div v-if="this.products[product.id]['addons'].length > 0">
+                        <div v-for="addon in product.addons">
+                            <div v-if="parseFloat(addon.total_product) > 0">
+                                <div class="d-flex flex-no-wrap align-center justify-end ">
+                                    <div class="d-flex flex-no-wrap align-center justify-end ">
+                                        <div class="mr-2">
+                                            <h3 class="text-left">{{ product.name }}</h3>
+                                        </div>
+                                        <v-avatar class="ma-1" size="50" rounded="0">
+                                            <v-img :src="product.img"></v-img>
+                                        </v-avatar>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-center justify-space-between ma-5">
+                                    <div class="mr-2 ">
+                                        <div class="" v-for="key in Object.keys(addon.options)">
+                                            <h4 class="">{{ key }} :</h4>
+                                            <div v-for="addonkey in Object.keys(addon.options[key]['addons'])">
+                                                <h4 v-if="addon.options[key]['addons'][addonkey]['quantity'] > 0"
+                                                    class="text-left text-grey">
+                                                    {{ addon.options[key]['addons'][addonkey]['quantity'] }} x {{
+                                                        addonkey }}
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-no-wrap justify-space-between ma-2 ">
+                                    <h2 class="text-left text-green-darken-1 font-weight-bold mt-2 ml-2">
+                                        {{ parseFloat(addon.total_product).toFixed(2) }} DH
+                                    </h2>
+                                    <div class="d-flex justify-space-between">
+                                        <v-btn class="text-green-darken-1" size="large" variant="text"
+                                            @click="decrementcartaddon(addon)">
+                                            <h1>-</h1>
+                                        </v-btn>
+                                        <h2 class="ma-2">{{ addon.quantity }}</h2>
+                                        <v-btn class="text-green-darken-1" size="large" variant="text"
+                                            @click="incrementcartaddon(addon)">
+                                            <h1>+</h1>
+                                        </v-btn>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -178,7 +223,7 @@
                 <h2><v-icon color="green">mdi-check-circle-outline</v-icon></h2>
                 <h3>Commande ajoutée avec succés</h3>
             </v-card-text>
-            <a ref="whatsappbtn" :href="whatsapplink"  target="_blank" class="text-decoration-none ma-3">
+            <a ref="whatsappbtn" :href="whatsapplink" target="_blank" class="text-decoration-none ma-3">
                 <v-btn block color="green-lighten-1" size="large" variant="elevated" class="text-h6 text-white">
                     Envoyer par Whatsapp
                     <v-icon class="ml-2">mdi-whatsapp</v-icon>
@@ -283,6 +328,11 @@ export default {
                         total += parseFloat(this.products[product]['options'][option]['total_product'])
                     }
                 }
+                else if (this.products[product]['addons'].length > 0) {
+                    for (const addon in this.products[product]['addons']) {
+                        total += parseFloat(this.products[product]['addons'][addon]['total_product'])
+                    }
+                }
                 else {
                     total += parseFloat(this.products[product]['total_product'])
                 }
@@ -308,15 +358,34 @@ export default {
         whatsapplink() {
             let link = 'https://wa.me/' + this.whatsapp.replace(/\s/g, '') + "?text="
             for (const product in this.products) {
+
+                if (Object.keys(this.products[product]['options']).length == 0 && this.products[product]['addons'].length == 0) {
+                    link += this.products[product]['quantity'] + ' x ' + this.products[product]['name'] + "%0a"
+                }
+
+                // options
                 if (Object.keys(this.products[product]['options']).length > 0) {
                     for (const option in this.products[product]['options']) {
                         link += this.products[product]['options'][option]['quantity'] + ' x ' + this.products[product]['name'] + ' - ' + this.products[product]['options'][option]['name'] + "%0a"
                     }
                 }
-                else {
-                    link += this.products[product]['quantity'] + ' x ' + this.products[product]['name'] + "%0a"
+
+                //addons
+                if (this.products[product]['addons'].length > 0) {
+                    for (const addon in this.products[product]['addons']) {
+                        link += this.products[product]['addons'][addon]['quantity'] + ' x ' + this.products[product]['name'] + "%0a"
+                        for (const option in this.products[product]['addons'][addon]['options']) {
+                            if (parseFloat(this.products[product]['addons'][addon]['options'][option]['addons'][addonkey]['quantity']) > 0) {
+                                link += '- ' + option + ':' + "%0a"
+                                for (const addonkey in this.products[product]['addons'][addon]['options'][option]['addons']) {
+                                    link += '-- ' + this.products[product]['addons'][addon]['options'][option]['addons'][addonkey]['quantity'] + ' x ' + addonkey + "%0a"
+                                }
+                            }
+                        }
+                    }
                 }
             }
+
             if (this.shippingoption == 'pickup') {
                 link += 'A emporter' + "%0a"
             } else {
@@ -329,7 +398,7 @@ export default {
             return link
         },
         productList() {
-            var cartProducts = Object.values(this.products);
+            var cartProducts = JSON.parse(JSON.stringify(Object.values(this.products)));
 
             for (const product in cartProducts) {
                 if (Object.keys(cartProducts[product]['options']).length > 0) {
@@ -339,6 +408,12 @@ export default {
                 }
                 else {
                     cartProducts[product]['options'] = []
+                }
+                //stringify addons
+                if (cartProducts[product]['addons'].length > 0) {
+                    cartProducts[product]['addons'] = JSON.stringify(cartProducts[product]['addons'])
+                } else {
+                    cartProducts[product]['addons'] = ''
                 }
             }
 
@@ -395,6 +470,18 @@ export default {
             }
             this.saveCartInCookies()
         },
+        incrementcartaddon(addon) {
+            addon.quantity += 1;
+            addon.total_product = parseFloat(addon.quantity) * (parseFloat(addon.price) + parseFloat(addon.total_addons))
+            this.saveCartInCookies()
+        },
+        decrementcartaddon(addon) {
+            if (addon.quantity > 0) {
+                addon.quantity -= 1;
+                addon.total_product = parseFloat(addon.quantity) * (parseFloat(addon.price) + parseFloat(addon.total_addons))
+                this.saveCartInCookies()
+            }
+        },
         removeproduct(product) {
             delete this.products[product.id]
             Cookies.set(("cart_" + this.storeId), JSON.stringify(this.products))
@@ -416,15 +503,14 @@ export default {
             axios
                 .post(`/order/create`, fd)
                 .then((response) => {
-                    console.log(response)
                     if (response.status === 200) {
+                        console.log(this.whatsapplink)
                         Cookies.set(("cart_" + this.storeId), JSON.stringify({}))
                         this.orderId = response.data.id
                         this.dialog = true
                         this.loading = false
                     }
                 });
-
         }
     },
 
