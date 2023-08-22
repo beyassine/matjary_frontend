@@ -375,12 +375,14 @@ export default {
                     for (const addon in this.products[product]['addons']) {
                         link += this.products[product]['addons'][addon]['quantity'] + ' x ' + this.products[product]['name'] + "%0a"
                         for (const option in this.products[product]['addons'][addon]['options']) {
-                            if (parseFloat(this.products[product]['addons'][addon]['options'][option]['addons'][addonkey]['quantity']) > 0) {
-                                link += '- ' + option + ':' + "%0a"
-                                for (const addonkey in this.products[product]['addons'][addon]['options'][option]['addons']) {
+                            link += '- ' + option + ':' + "%0a"
+                            for (const addonkey in this.products[product]['addons'][addon]['options'][option]['addons']) {
+                                if (parseFloat(this.products[product]['addons'][addon]['options'][option]['addons'][addonkey]['quantity']) > 0) {
                                     link += '-- ' + this.products[product]['addons'][addon]['options'][option]['addons'][addonkey]['quantity'] + ' x ' + addonkey + "%0a"
                                 }
+
                             }
+
                         }
                     }
                 }
