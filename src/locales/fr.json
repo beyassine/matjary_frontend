@@ -1,4 +1,7 @@
 {
+  "sidebar": {
+    "logout": "Se Déconnecter "
+  },
   "currency": {
     "DH": "DH"
   },
@@ -10,5 +13,34 @@
   },
   "cart": {
     "cart": "Mon Panier"
+  },
+  "adminorders": {
+    "orders": "Commandes",
+    "pickup": "A Emprter",
+    "delivery": "Livraison",
+    "datecreated": "Date Commande",
+    "name": "Nom Complet",
+    "phone": "Numéro Téléphone",
+    "products": "Produits",
+    "totalorder": "Total",
+    "shipcost": "Coût Livraison ",
+    "totalproducts": "Total Produits",
+    "sendwhatsapp": "Envoyer Whatsapp",
+    "confirmorder": "Confirmer Commande"
+  },
+  "adminproduct": {
+    "addproduct": "Ajouter Produit",
+    "add":"Ajouter",
+    "edit": "Modifier",
+    "newproduct": "Nouveau Produit",
+    "productimage": "Image Produit",
+    "complementimages": "Images Complémentaires",
+    "productname": "Nom Produit",
+    "description": "Description",
+    "category": "Catégorie",
+    "price": "Prix",
+    "options": "Options",
+    "optionprice": "Prix",
+    "optionname": "Nom"
   }
 }

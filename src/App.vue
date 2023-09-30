@@ -1,16 +1,17 @@
 <template>
   <v-app class="app">
     <Header v-if="!this.$route.meta.extend" />
-    <Sidebar v-if="!this.$route.meta.extend"/>
-    <MobileSidebar v-if="!this.$route.meta.extend"/>
-    <v-main :class="this.$route.meta.white? 'white':'main'">      
-      <router-view/>      
-    </v-main> 
+    <Sidebar :lang="this.lang" v-if="!this.$route.meta.extend" />
+    <MobileSidebar :lang="this.lang"  v-if="!this.$route.meta.extend" />
+    <v-main  :class="this.$route.meta.white ? 'white' : 'main'">
+      <router-view />
+    </v-main>
   </v-app>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { useI18n } from 'vue-i18n'
+import { mapGetters,mapActions } from "vuex";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -19,7 +20,7 @@ import BottomNav from "./components/BottomNav";
 
 export default {
   name: "App",
-  
+
   components: {
     Header,
     BottomNav,
@@ -28,38 +29,50 @@ export default {
   },
   data() {
     return {
+      lang: ''
     };
   },
   methods: {
     ...mapActions(["initialiseUser"])
   },
   computed: {
-    
+    ...mapGetters(["getstoreLang"]),
+
   },
-  beforeMount() {},
+  beforeMount() { },
   created() {
+    this.lang = this.getstoreLang;
+    const t = useI18n()
+    t.locale.value = this.lang
+    return { t }
   },
 };
 </script>
 <style lang="scss">
 @import "./scss/variables.scss";
+
 .app {
   font-family: $body-font-family;
 }
-.white{
-  background-color: white; 
+
+.white {
+  background-color: white;
 }
-.main{
-  background-color: rgb(245, 245, 245); 
+
+.main {
+  background-color: rgb(245, 245, 245);
 }
-.container{
+
+.container {
   margin: auto;
   padding: 20px;
 }
-.row-container{
+
+.row-container {
   background-color: white;
 }
-.breadcrumb{
+
+.breadcrumb {
   background-color: rgb(230, 230, 230);
   border-bottom: solid;
   border-width: 1px;

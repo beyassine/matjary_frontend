@@ -1,4 +1,7 @@
 {
+    "sidebar":{
+        "logout":"تسجيل خروج "
+    },
     "currency": {
         "DH": "د.م"
     },
@@ -10,5 +13,34 @@
     },
     "cart": {
         "cart": "سلة التسوق"
+    },
+    "adminorders": {
+        "orders": "الطلبات",
+        "pickup": "إستلام من المتجر",
+        "delivery": "شحن و توصيل",
+        "datecreated": "تاريخ الطلب ",
+        "name": "الإسم الكامل",
+        "phone": "رقم الهاتف",
+        "products": "المنتجات",
+        "totalorder": "الثمن الإجمالي",
+        "shipcost": "ثمن الشحن",
+        "totalproducts": "ثمن المنتجات",
+        "sendwhatsapp": "ابعث واتساب",
+        "confirmorder": "تأكيد الطلب"
+    },
+    "adminproduct":{
+        "addproduct":"أضف منتج",
+        "add":"أضف",
+        "edit":"تعديل",
+        "newproduct":"منتج جديد",
+        "productimage":"صورة المنتج",
+        "complementimages":"صور إضافية",
+        "productname":"إسم المنتج",
+        "description":"المواصفات",
+        "category":"التصنيف",
+        "price":"سعر المنتج",
+        "options":"الخيارات",
+        "optionprice":"الثمن",
+        "optionname":"الإسم"
     }
 }

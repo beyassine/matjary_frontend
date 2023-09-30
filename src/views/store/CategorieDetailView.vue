@@ -14,27 +14,36 @@
                 </router-link>
             </div>
         </div>
-        <v-divider class="ma-5"></v-divider>
+        <div class=" d-flex align-center justify-center mt-3">
+            <v-divider class="ma-5" ></v-divider>
+        </div>
     </div>
     <div :class="$vuetify.display.mdAndUp ? 'homecontainer-lg' : 'homecontainer-sm'">
-        <h3 v-if="categories.length == 0" class="text-center"><v-icon size="60">mdi-shopping-search-outline</v-icon></h3>
-        <v-row class="d-flex flex-row-reverse ">
-            <v-col v-for="(categorie, index) in categories" :key="categories.id"
+        <h3 v-if="allproducts.length == 0" class="text-center"><v-icon size="60">mdi-shopping-search-outline</v-icon></h3>
+        <v-row v-for="(categoryProducts, category) in filteredProducts" :key="category"
+            class="d-flex flex-row-reverse mt-2">
+            <v-col cols="12" class="text-center">
+                <h2 class="text-green">{{ category }}</h2>
+            </v-col>
+            <v-col v-for="(product, index) in categoryProducts" :key="product.id"
                 :cols="$vuetify.display.mdAndUp ? '4' : '12'">
-                <v-card class="mb-1" elevation="1" :to="{ name: 'storecategoriedetail', params: { storeId:storeId,categorieId: categorie.name } }">
+                <v-card @click="showProduct(product)" class="mb-1" elevation="1">
                     <div class="d-flex justify-space-between align-center">
                         <div class="text-green ma-5">
-                            <h3><v-icon>mdi-chevron-left</v-icon></h3>
+                            <h1>+</h1>
                         </div>
                         <div class="d-flex flex-no-wrap align-center justify-end ma-1">
                             <div class="mr-2">
-                                <h3 class="text-right">{{ categorie.name }}</h3>
+                                <h4 class="text-right">{{ product.productname }}</h4>
+                                <h3 class="text-right text-green font-weight-bold mt-2 ml-2">
+                                    {{ parseFloat(product.unitprice).toFixed(2) }} {{ $t('currency.DH') }}
+                                </h3>
                             </div>
                             <div class="d-flex flex-no-wrap justify-center ma-1">
                                 <v-avatar class="ma-1" size="80" rounded="0">
-                                    <v-img :src="categorie.image == null || categorie.image == ''
-                                        ? imgvoid
-                                        : categorie.image"></v-img>
+                                    <v-img :src="product.images == null || product.images == ''
+                                        ? src1
+                                        : product.images[0]"></v-img>
                                 </v-avatar>
                             </div>
                         </div>
@@ -42,6 +51,77 @@
                 </v-card>
             </v-col>
         </v-row>
+    </div>
+    <div class="text-center">
+        <v-dialog class="dialog" v-model="dialog" fullscreen>
+            <v-card style="padding-bottom: 60px;">
+                <v-toolbar color="white" @click="dialog = false">
+                    <v-btn icon color="green" size="x-large" @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
+                <v-row style="padding: 20px;">
+                    <v-col cols="12">
+                        <v-img height="200px" :src="bigImage" />
+                    </v-col>
+                    <v-col cols="3" v-if="filteredImages.length > 1" v-for="(image, index) in filteredImages" :key="index">
+                        <v-img v-if="image !== ''" height="80px" :src="image" @click="selectImage(index)" />
+                    </v-col>
+                </v-row>
+                <v-card-text class="d-flex align-center">
+                    <h3 class="">{{ modalProduct.productname }}</h3>
+                </v-card-text>
+                <v-card-text class="mb-2 text-left">
+                    <h2 v-if="!modalProduct.options || modalProduct.options.length == 0" class="text-green-darken-1 font-weight-bold">
+                        {{ parseFloat(modalProduct.unitprice).toFixed(2) }} {{ $t('currency.DH') }}
+                    </h2>
+                    <v-radio-group v-if="modalProduct.options && modalProduct.options.length > 0" v-model="modalOption">
+                        <v-radio class="ml-2" color="green" v-for="option in modalProduct.options" :value="option">
+                            <template v-slot:label>
+                                <h3>{{ option.name }} - <strong>{{ option.cost }} {{ $t('currency.DH') }}</strong></h3>
+                            </template>
+                        </v-radio>
+                    </v-radio-group>
+                </v-card-text>
+                <div v-if="modalProduct.addons && modalProduct.addons.length > 0">
+                    <v-card-text v-for="addon in modalProduct.addons">
+                        <v-divider class="mb-5"></v-divider>
+                        <h2 class="text-green mb-2">{{ addon.name }}</h2>
+                        <v-card-text v-for="option in addon.options"
+                            class="d-flex flex-no-wrap justify-space-between align-center">
+                            <h3> {{ option.name }} <span v-if="option.cost !== '0'" class="text-green">+ {{ option.cost
+                            }} {{ $t('currency.DH') }}</span></h3>
+                            <div class="d-flex align-center justify-space-between">
+                                <v-btn v-if="parseFloat(option.quantity) > 0" class="text-green-darken-1" size="large"
+                                    variant="text" @click="decrementadddon(addon, option)">
+                                    <h3>-</h3>
+                                </v-btn>
+                                <h2 v-if="parseFloat(option.quantity) > 0" class="">{{ option.quantity }}</h2>
+                                <v-btn class="text-green-darken-1" size="large" variant="text" :disabled="addon.disabled"
+                                    @click="incrementadddon(addon, option)">
+                                    <h2>+</h2>
+                                </v-btn>
+                            </div>
+                        </v-card-text>
+                    </v-card-text>
+                </div>
+                <v-card-text class="d-flex align-center justify-center">                    
+                    <div class="d-flex justify-space-between">
+                        <v-btn class="text-green-darken-1" size="large" variant="text" @click="decrementCounter">
+                            <h2>-</h2>
+                        </v-btn>
+                        <h2 class="ma-2">{{ modalQuantity }}</h2>
+                        <v-btn class="text-green-darken-1" size="large" variant="text" @click="incrementCounter">
+                            <h2>+</h2>
+                        </v-btn>
+                    </div>
+                </v-card-text>
+            </v-card>
+            <v-btn color="green-lighten-1" size="large" variant="elevated" class=" btn-float text-h6 text-white"
+                :disabled="!cartBtn" @click="addModalproduct(modalProduct)">
+                {{ $t('store.add_to_cart') }}
+            </v-btn>
+        </v-dialog>
     </div>
     <v-bottom-navigation v-if="showCart" style="height: 70px;" elevation="0">
         <v-icon class="float d-flex justify-center align-center" size="x-large" icon="mdi-shopping-outline"
@@ -196,6 +276,7 @@ export default {
     data() {
         return {
             storeId: this.$route.params.storeId,
+            categorieId:this.$route.params.categorieId,
             telephone: '',
             whatsapp: '',
             maps: '',
@@ -204,7 +285,7 @@ export default {
             storename: '',
             logo: '',
             allproducts: '',
-            categories:'',
+            categories: ['-----'],
             selectedCategory: '',
             lang: 'ar',
             // product detail
@@ -223,6 +304,25 @@ export default {
 
     computed: {
         ...mapGetters(["iscart"]),
+        filteredProducts() {
+            const filtered = {};
+            filtered[this.categorieId] = this.groupedProducts[this.categorieId];
+            return filtered;
+        },
+        groupedProducts() {
+            const grouped = {};
+            if (Array.isArray(this.allproducts)) {
+                this.allproducts.forEach(product => {
+                    const category = product.categorie;
+                    if (!grouped[category]) {
+                        grouped[category] = [];
+                        this.categories.push(category)
+                    }
+                    grouped[category].push(product);
+                });
+            }
+            return grouped;
+        },
         total_products: function () {
             let total = 0
             for (const product in this.cart_products) {
@@ -472,7 +572,7 @@ export default {
         axios
             .get(`/store/${this.storeId}`)
             .then((response) => {
-                this.categories= response.data.categories
+                this.allproducts = response.data.products
                 this.storename = response.data.storename
                 this.logo = response.data.logo
                 this.lang = response.data.lang

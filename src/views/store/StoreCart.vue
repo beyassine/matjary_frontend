@@ -15,27 +15,10 @@
             </div>
         </div>
         <div class=" d-flex align-center justify-center mt-3">
-            <div class="ma-3 pa-3">
-                <a class="text-decoration-none text-black " :href="'tel:+' + this.telephone.replace(/\s/g, '')">
-                    <v-icon class="mb-1" color="grey-darken-3" icon="mdi-phone-in-talk-outline" size="35"></v-icon>
-                </a>
-            </div>
-            <div class="ma-3 pa-3">
-                <a class="text-center text-decoration-none text-black" target="_blank"
-                    :href="'https://wa.me/' + this.whatsapp.replace(/\s/g, '')">
-                    <v-icon class="mb-1" color="grey-darken-3" icon="mdi-whatsapp" size="35"></v-icon>
-                </a>
-            </div>
-            <div class="ma-3 pa-3">
-                <a class="text-center text-decoration-none text-black" target="_blank" :href="this.maps">
-                    <v-icon class="mb-1" color="grey-darken-3" icon="mdi-map-marker-radius-outline" size="35"></v-icon>
-                </a>
-            </div>
+            <v-divider class="ma-5" ></v-divider>
         </div>
     </div>
-
-    <v-divider class="mb-5"></v-divider>
-
+    
     <div :class="$vuetify.display.smAndUp ? 'homecontainer-lg bg-white' : 'homecontainer-sm bg-white'">
         <h1 class="text-center mb-5">سلة التسوق</h1>
         <v-row class="d-flex flex-row-reverse mt-3">
@@ -107,24 +90,6 @@
             </v-col>
             <v-col :cols="$vuetify.display.mdAndUp ? '6' : '12'">
                 <v-form v-model="valid">
-                    <h2 class="text-right text-green-darken-1 mb-5">خيارات الشحن</h2>
-                    <v-container fluid>
-                        <v-radio-group class="d-flex justify-end" color="green" v-model="shippingoption">
-                            <v-radio v-if="this.pickup" value="pickup">
-                                <template v-slot:label>
-                                    <div class="text-h6 text-right">إستلام من المتجر:<strong>مجانا
-                                        </strong></div>
-                                </template>
-                            </v-radio>
-                            <v-radio v-if="this.shipping" value="delivery">
-                                <template v-slot:label>
-                                    <div class="text-h6 text-right">شحن و توصيل:<strong class=""> {{
-                                        shipcost }} د.م
-                                        </strong></div>
-                                </template>
-                            </v-radio>
-                        </v-radio-group>
-                    </v-container>
                     <h2 class="text-right text-green-darken-1 mt-5 mb-5">معلومات الزبون</h2>
                     <v-card-item class="mt-3">
                         <div class="text-right align-center">
@@ -157,7 +122,7 @@
                             د.م {{ total_shipping.toFixed(2) }}
                         </h3>
                         <h3 class="text-right">
-                            : ثمن التوصيل
+                            : ثمن  الخدمة والتوصيل
                         </h3>
                     </div>
                     <v-divider class="mb-3"></v-divider>
@@ -298,7 +263,7 @@ export default {
         },
         total_shipping() {
             if (this.shippingoption == 'delivery') {
-                return parseFloat(this.shipcost)
+                return parseFloat(this.shipcost) +  Math.floor(0.05*this.total_products) + 1
             } else {
                 return 0
             }
@@ -347,8 +312,13 @@ export default {
                 else {
                     cartProducts[product]['options'] = []
                 }
+                //stringify addons
+                if (cartProducts[product]['addons'].length > 0) {
+                    cartProducts[product]['addons'] = JSON.stringify(cartProducts[product]['addons'])
+                } else {
+                    cartProducts[product]['addons'] = ''
+                }
             }
-
             return cartProducts
         },
 

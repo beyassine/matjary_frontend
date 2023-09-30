@@ -1,34 +1,31 @@
 <template>
-  <v-navigation-drawer
-    class="lg-and-down elevation-3 text-right"
-    width="180"
-    location="right"
-  >
-    <v-list density="compact" class="mt-2" nav>
-      <router-link
-        v-for="[icon, title, route] in adminlinks"
-        :key="title"
-        class="text-decoration-none text-black text-right"
-        :to="{
+  <v-navigation-drawer class="lg-and-down elevation-3 text-right" width="200" :location="sidelocation">
+    <v-list v-if="this.lang=='ar'" density="compact" class="mt-2" nav>
+      <router-link v-for="[icon, title, route] in aradminlinks" :key="title"
+        class="text-decoration-none text-black text-right" :to="{
           name: route,
-        }"
-      >
+        }">
         <v-list-item class="mb-2" :append-icon="icon">
-          <h3>{{ title }}</h3></v-list-item
-        >
+          <h3>{{ title }}</h3>
+        </v-list-item>
+      </router-link>
+    </v-list>
+    <v-list v-if="this.lang=='fr'" density="compact" class="mt-2" nav>
+      <router-link v-for="[icon, title, route] in fradminlinks" :key="title"
+        class="text-decoration-none text-black" :to="{
+          name: route,
+        }">
+        <v-list-item class="mb-2" :prepend-icon="icon">
+          <h3>{{ title }}</h3>
+        </v-list-item>
       </router-link>
     </v-list>
     <template v-slot:append>
       <div class="pa-2">
-        <v-btn
-          color="red-lighten-1"
-          variant="elevated"
-          class="text-white"
-          block
-          @click="logout"
-        >
-          <h3>تسجيل خروج<v-icon class="ml-2">mdi-logout</v-icon></h3></v-btn
-        >
+        <v-btn color="red-lighten-1" variant="elevated" class="text-white" block @click="logout">
+          <h4 v-if="this.lang=='ar'" >تسجيل خروج <v-icon class="ml-2">mdi-logout</v-icon></h4>
+          <h4 v-if="this.lang=='fr'" ><v-icon class="mr-2">mdi-logout</v-icon>Se Déconnecter</h4>
+        </v-btn>
       </div>
     </template>
   </v-navigation-drawer>
@@ -39,19 +36,38 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Sidebar",
+  props: {
+    lang: {
+      type: String,
+    },
+  },
   data() {
     return {
       storeId: this.$route.params.storeId,
-      adminlinks: [
+      aradminlinks: [
         ["mdi-clipboard-text-outline", "الطلبات", "adminorders"],
         ["mdi-package-variant-closed", "المنتجات", "adminproducts"],
         ["mdi-format-list-bulleted-square", "التصنيفات", "admincategories"],
         ["mdi-cog-outline", "الإعدادات", "adminsettings"],
       ],
+      fradminlinks: [
+        ["mdi-clipboard-text-outline", "Commandes", "adminorders"],
+        ["mdi-package-variant-closed", "Produits", "adminproducts"],
+        ["mdi-format-list-bulleted-square", "Catégories", "admincategories"],
+        ["mdi-cog-outline", "Paramétres", "adminsettings"],
+      ],
     };
   },
   computed: {
     ...mapGetters(["getUserRole"]),
+    sidelocation(){
+      if(this.lang=='ar'){
+        return 'right'
+      }else{
+        return 'left'
+      }
+      
+    }
   },
   methods: {
     ...mapActions(["logoutUser"]),

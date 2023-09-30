@@ -2,7 +2,7 @@
   <v-breadcrumbs class="d-flex justify-center align-center breadcrumb">
     <div></div>
     <div>
-      <h2>منتج جديد</h2>
+      <h2> {{ $t('adminproduct.newproduct') }}</h2>
     </div>
   </v-breadcrumbs>
   <div class="container">
@@ -12,7 +12,7 @@
           <div class="d-flex align-center text-right">
             <v-card class="mx-auto" elevation="0">
               <v-card-item>
-                <h3 class="mb-3">صورة المنتج</h3>
+                <h3 class="mb-3"> {{ $t('adminproduct.productimage') }}</h3>
                 <div v-if="img_changes[0]" class="d-flex justify-center mt-1 mb-1">
                   <v-btn class="" color="black" size="x-small" icon dark @click="deleteImage(0)">
                     <v-icon class="mt-1">mdi-close</v-icon>
@@ -29,7 +29,7 @@
                   <input ref="image_0" class="d-none" type="file" accept="image/*" label="" :disabled="img_changes[0]"
                     @change="uploadImage(event, 0)" />
                 </v-avatar>
-                <h3 class="mt-3 mb-3">صور إضافية</h3>
+                <h3 class="mt-3 mb-3"> {{ $t('adminproduct.complementimages') }}</h3>
                 <v-row class="">
                   <v-col cols="6">
                     <div v-if="img_changes[1]" class="d-flex justify-center mt-1 mb-1">
@@ -112,40 +112,40 @@
           <div class="">
             <v-card class="mx-auto" elevation="0">
               <v-card-item class="">
-                <h3 class="mb-3">إسم المنتج</h3>
-                <v-text-field append-inner-icon="mdi-pencil" placeholder="أدخل الإسم" variant="outlined" v-model="title"
+                <h3 class="mb-3"> {{ $t('adminproduct.productname') }}</h3>
+                <v-text-field append-inner-icon="mdi-pencil"  variant="outlined" v-model="title"
                   :readonly="loading" :rules="required"></v-text-field>
               </v-card-item>
               <v-card-item class="">
-                <h3 class="mb-3">المواصفات</h3>
-                <v-textarea append-inner-icon="mdi-abjad-arabic" placeholder="مواصفات المنتج" variant="outlined"
+                <h3 class="mb-3">{{ $t('adminproduct.description') }}</h3>
+                <v-textarea append-inner-icon="mdi-abjad-arabic" variant="outlined"
                   v-model="description" :readonly="loading"></v-textarea>
               </v-card-item>
               <v-card-item class="">
-                <h3 class="mb-3">التصنيف</h3>
+                <h3 class="mb-3">{{ $t('adminproduct.category') }}</h3>
                 <v-select label="" :items="categories" item-title="name" item-value="name" v-model="categorie"></v-select>
               </v-card-item>
               <v-card-item class="">
-                <h3 class="mb-3">سعر المنتج</h3>
-                <v-text-field append-inner-icon="mdi-tag" placeholder="0.00" variant="outlined" type="number"
+                <h3 class="mb-3">{{ $t('adminproduct.price') }}</h3>
+                <v-text-field append-inner-icon="mdi-tag" variant="outlined" type="number"
                   v-model="unitprice" :readonly="loading" :rules="required"></v-text-field>
               </v-card-item>
               <v-card-item class="">
-                <h3 class="mb-3">الخيارات</h3>
+                <h3 class="mb-3">{{ $t('adminproduct.options') }}</h3>
                 <v-row>
                   <v-col cols="6">
-                    <h5 class="mb-3">الثمن</h5>
+                    <h5 class="mb-3">{{ $t('adminproduct.optionprice') }}</h5>
                     <v-text-field append-inner-icon="mdi-tag" placeholder="" variant="outlined"
                       v-model="newItemCost"></v-text-field>
                   </v-col>
                   <v-col cols="6">
-                    <h5 class="mb-3">الإسم</h5>
+                    <h5 class="mb-3">{{ $t('adminproduct.optionname') }}</h5>
                     <v-text-field append-inner-icon="mdi-pencil" placeholder="" variant="outlined"
                       v-model="newItemName"></v-text-field>
                   </v-col>
                 </v-row>
                 <v-btn color="blue-lighten-1" size="large" variant="elevated" class="text-h5" @click="addOption">
-                  أضف
+                  {{ $t('adminproduct.add') }}
                 </v-btn>
                 <ul>
                   <li v-for="(item, index) in options" :key="index">
@@ -157,7 +157,7 @@
               <v-card-actions>
                 <v-btn :disabled="!form" :loading="loading" block color="green-lighten-1" size="large" type="submit"
                   variant="elevated" class="text-h5">
-                  أضف منتج
+                  {{ $t('adminproduct.addproduct') }}
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -173,6 +173,7 @@
 }
 </style>
 <script>
+import { useI18n } from 'vue-i18n'
 import { mapGetters } from "vuex";
 
 import axiosInstance from "../../axios/axiosInstance";
@@ -187,6 +188,7 @@ export default {
   data() {
     return {
       storeId: "",
+      lang:"",
       userId: "",
       categories: '',
       form: false,
@@ -215,7 +217,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["getUserId", "getStoreId"]),
+    ...mapGetters(["getUserId", "getStoreId","getstoreLang"]),
     optionsList() {
       return this.options.map(item =>  ({
         'name': item.name.toString(),
@@ -293,6 +295,9 @@ export default {
   },
 
   created() {
+    const t = useI18n()
+    this.lang = this.getstoreLang;
+    t.locale.value = this.lang
     this.userId = this.getUserId;
     this.storeId = this.getStoreId;
     axiosInstance
@@ -300,6 +305,7 @@ export default {
       .then((response) => {
         this.categories = response.data;
       })
+    return { t }
   },
 };
 </script>

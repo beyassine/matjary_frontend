@@ -9,7 +9,8 @@ import HomeView from '../views/HomeView.vue'
 
 
 // Store
-import StoreDetail from '../views/store/StoreDetailView.vue'
+import StoreDetail from '../views/store/StoreIndexView.vue'
+import CategorieDetail from '../views/store/CategorieDetailView.vue'
 import ProductDetail from '../views/store/ProductDetailView.vue'
 import CartDetail from '../views/store/StoreCart.vue'
 import frCartDetail from '../views/store/frStoreCart.vue'
@@ -22,6 +23,7 @@ import AdminProductAddView from '../views/admin/AdminProductAddView.vue'
 import AdminProductEditView from '../views/admin/AdminProductEditView.vue'
 ///Categorie
 import AdminCategorieView from '../views/admin/AdminCategorieView.vue'
+import AdminCategorieDetailView from '../views/admin/AdminCategorieDetailView.vue'
 ///Order
 import AdminOrderView from '../views/admin/AdminOrderView.vue'
 import AdminOrderDetailView from '../views/admin/AdminOrderDetailView.vue'
@@ -65,6 +67,12 @@ const routes = [
     component: StoreDetail
   },
   {
+    path: '/:storeId/:categorieId',
+    name: 'storecategoriedetail',
+    meta: { extend: true, requiresAuth: false , white: true  },
+    component: CategorieDetail
+  },
+  {
     path: '/:storeId/:productId',
     name: 'productdetail',
     meta: { extend: true, requiresAuth: false },
@@ -82,7 +90,6 @@ const routes = [
     meta: { extend: true, requiresAuth: false, white: true  },
     component: frCartDetail
   },
-
   // Admin   
 
   /// Products
@@ -110,6 +117,12 @@ const routes = [
     name: 'admincategories',
     meta: { extend: false, requiresAuth: true },
     component: AdminCategorieView
+  },  
+  {
+    path: '/admin/categories/:categorieId',
+    name: 'admincategoriedetail',
+    meta: { extend: false, requiresAuth: true },
+    component: AdminCategorieDetailView
   },
   ///Orders
   {
