@@ -45,14 +45,12 @@ export default {
       storeId: this.$route.params.storeId,
       aradminlinks: [
         ["mdi-clipboard-text-outline", "الطلبات", "adminorders"],
-        ["mdi-package-variant-closed", "المنتجات", "adminproducts"],
-        ["mdi-format-list-bulleted-square", "التصنيفات", "admincategories"],
+        ["mdi-format-list-bulleted-square", "المنتجات", "admincategories"],
         ["mdi-cog-outline", "الإعدادات", "adminsettings"],
       ],
       fradminlinks: [
         ["mdi-clipboard-text-outline", "Commandes", "adminorders"],
-        ["mdi-package-variant-closed", "Produits", "adminproducts"],
-        ["mdi-format-list-bulleted-square", "Catégories", "admincategories"],
+        ["mdi-format-list-bulleted-square", "Produits", "admincategories"],
         ["mdi-cog-outline", "Paramétres", "adminsettings"],
       ],
       isOpen: false,

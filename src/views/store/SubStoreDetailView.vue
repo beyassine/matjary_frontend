@@ -3,7 +3,7 @@
         <div class="d-flex justify-center align-center ">
             <div>
                 <router-link class="text-decoration-none text-black" :to="{
-                    name: 'storedetail',
+                    name: 'storehome',
                     params: { storeId: this.storeId }
                 }">
                     <v-img height="120" :src="logo == null || logo == ''
@@ -14,11 +14,44 @@
                 </router-link>
             </div>
         </div>
-        <div class=" d-flex align-center justify-center mt-3">
-            <v-divider class="ma-5" ></v-divider>
+        <div class=" d-flex align-center justify-center ma-5">
+            <a class="text-decoration-none text-black" target="_blank"
+                :href="'https://wa.me/' + telephone.replace(/\s/g, '')">
+                <v-btn class="ma-5" variant="text" icon color="">
+                    <v-icon size="42">mdi-whatsapp</v-icon>
+                </v-btn>
+            </a>
+            <router-link class="text-decoration-none text-black d-flex justify-center" :to="{
+                name: 'storehome',
+                params: { storeId: this.storeId }
+            }">
+                <v-btn class="ma-5" variant="text" icon>
+                    <v-icon size="43">mdi-home-outline</v-icon>
+                </v-btn>
+            </router-link>
+            <v-btn class="ma-5" variant="text" icon @click.stop="drawer = !drawer">
+                <v-badge color="red" v-if="iscart" dot>
+                    <v-icon size="40">mdi-shopping-outline</v-icon>
+                </v-badge>
+
+                <v-icon size="40" v-if="!iscart">mdi-shopping-outline</v-icon>
+            </v-btn>
         </div>
+        <v-divider class="ma-5"></v-divider>
     </div>
     <div :class="$vuetify.display.mdAndUp ? 'homecontainer-lg' : 'homecontainer-sm'">
+        <div class="d-flex flex-no-wrap align-center justify-center ma-1">
+            <div class="mr-2">
+                <h3 class="text-right">{{ substorename }}</h3>
+            </div>
+            <div class="d-flex flex-no-wrap justify-center ma-1">
+                <v-avatar class="ma-1" size="80" rounded="0">
+                    <v-img :src="substorelogo == null || substorelogo == ''
+                        ? src1
+                        : substorelogo"></v-img>
+                </v-avatar>
+            </div>
+        </div>
         <div>
             <v-select v-model="selectedCategory" :items="categories" item-text="category" item-value="category">
             </v-select>
@@ -85,7 +118,8 @@
                     </div>
                 </v-card-text>
                 <v-card-text class="mb-2 text-left">
-                    <h2 v-if="!modalProduct.options || modalProduct.options.length == 0" class="text-green-darken-1 font-weight-bold">
+                    <h2 v-if="!modalProduct.options || modalProduct.options.length == 0"
+                        class="text-green-darken-1 font-weight-bold">
                         {{ parseFloat(modalProduct.unitprice).toFixed(2) }} {{ $t('currency.DH') }}
                     </h2>
                     <v-radio-group v-if="modalProduct.options && modalProduct.options.length > 0" v-model="modalOption">
@@ -125,10 +159,10 @@
             </v-btn>
         </v-dialog>
     </div>
-    <v-bottom-navigation v-if="showCart" style="height: 70px;" elevation="0">
+    <!-- <v-bottom-navigation v-if="showCart" style="height: 70px;" elevation="0">
         <v-icon class="float d-flex justify-center align-center" size="x-large" icon="mdi-shopping-outline"
             @click.stop="drawer = !drawer"></v-icon>
-    </v-bottom-navigation>
+    </v-bottom-navigation> -->
     <v-navigation-drawer v-model="drawer" location="right" style="padding: 10px;" temporary>
         <h3 class="text-center mt-2 mb-5">{{ $t('store.products') }}</h3>
         <v-divider class="mb-5"></v-divider>
@@ -278,9 +312,9 @@ export default {
     data() {
         return {
             storeId: this.$route.params.storeId,
+            substoreId: this.$route.params.substoreId,
             telephone: '',
             whatsapp: '',
-            maps: '',
             src1: imagevoid,
             src2: storevoid,
             storename: '',
@@ -289,6 +323,9 @@ export default {
             categories: ['-----'],
             selectedCategory: '',
             lang: 'ar',
+            //substore
+            substorelogo: '',
+            substorename: '',
             // product detail
             dialog: false,
             modalProduct: '',
@@ -574,14 +611,16 @@ export default {
         }
         //Store 
         axios
-            .get(`/store/${this.storeId}`)
+            .get(`/store/sub/${this.storeId}/${this.substoreId}`)
             .then((response) => {
+                //store
                 this.telephone = response.data.telephone
-                this.whatsapp = response.data.whatsapp
-                this.maps = response.data.maps
-                this.allproducts = response.data.products
                 this.storename = response.data.storename
                 this.logo = response.data.logo
+                //substore
+                this.substorelogo = response.data.substore.logo
+                this.substorename = response.data.substore.storename
+                this.allproducts = response.data.substore.products
                 this.lang = response.data.lang
                 //change language
                 t.locale.value = response.data.lang

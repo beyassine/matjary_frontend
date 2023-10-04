@@ -3,7 +3,7 @@
         <div class="d-flex justify-center align-center ">
             <div>
                 <router-link class="text-decoration-none text-black" :to="{
-                    name: 'storedetail',
+                    name: 'storehome',
                     params: { storeId: this.storeId }
                 }">
                     <v-img height="120" :src="logo == null || logo == ''
@@ -14,26 +14,47 @@
                 </router-link>
             </div>
         </div>
-        <div class=" d-flex align-center justify-center mt-3">
-            <v-divider class="ma-5" ></v-divider>
+        <div class=" d-flex align-center justify-center ma-5">
+            <a class="text-decoration-none text-black" target="_blank"
+                :href="'https://wa.me/' + telephone.replace(/\s/g, '')">
+                <v-btn class="ma-5" variant="text" icon color="">
+                    <v-icon size="42">mdi-whatsapp</v-icon>
+                </v-btn>
+            </a>
+            <router-link class="text-decoration-none text-black d-flex justify-center" :to="{
+                name: 'storehome',
+                params: { storeId: this.storeId }
+            }">
+                <v-btn  class="ma-5" variant="text"  icon>
+                    <v-icon size="43">mdi-home-outline</v-icon>
+                </v-btn>
+            </router-link>
+            <v-btn  class="ma-5" variant="text" icon @click.stop="drawer = !drawer">
+                <v-badge color="red" v-if="iscart" dot>
+                    <v-icon size="40">mdi-shopping-outline</v-icon>
+                </v-badge>
+
+                <v-icon size="40" v-if="!iscart">mdi-shopping-outline</v-icon>
+            </v-btn>
         </div>
+        <v-divider class="ma-5"></v-divider>
     </div>
-    
+
+    <v-divider class="mb-5"></v-divider>
+
     <div :class="$vuetify.display.smAndUp ? 'homecontainer-lg bg-white' : 'homecontainer-sm bg-white'">
         <h1 class="text-center mb-5">سلة التسوق</h1>
         <v-row class="d-flex flex-row-reverse mt-3">
             <v-col class="bg-grey-lighten-2 mb-5" :cols="$vuetify.display.smAndUp ? '6' : '12'">
-
                 <h2 class="text-right text-green-darken-1 mb-3"> المنتجات</h2>
-
                 <h2 v-if="products.length == 0" class="text-center">لايوجد أي منتج</h2>
-
                 <v-card v-for="(product, index) in products" :key="product.id" class="ma-2 " elevation="0">
-                    <div v-if="Object.keys(this.products[product.id]['options']).length == 0">
+                    <div
+                        v-if="Object.keys(this.products[product.id]['options']).length == 0 && this.products[product.id]['addons'].length == 0">
                         <div class="d-flex flex-no-wrap align-center justify-end ">
                             <div class="d-flex flex-no-wrap align-center justify-end ">
                                 <div class="mr-2">
-                                    <h3 class="text-right">{{ product.name }}</h3>
+                                    <h3 class="text-left">{{ product.name }}</h3>
                                 </div>
                                 <v-avatar class="ma-1" size="50" rounded="0">
                                     <v-img :src="product.img"></v-img>
@@ -41,8 +62,8 @@
                             </div>
                         </div>
                         <div class="d-flex flex-no-wrap justify-space-between ma-2 ">
-                            <h2 class="text-right text-green-darken-1 font-weight-bold mt-2 ml-2">
-                                {{ parseFloat(product.total_product).toFixed(2) }} د.م
+                            <h2 class="text-left text-green-darken-1 font-weight-bold mt-2 ml-2">
+                                {{ parseFloat(product.total_product).toFixed(2) }} DH
                             </h2>
                             <div class="d-flex justify-space-between">
                                 <v-btn size="large" variant="text" @click="decrement(product)">
@@ -60,8 +81,8 @@
                             <div class="d-flex flex-no-wrap align-center justify-end ">
                                 <div class="d-flex flex-no-wrap align-center justify-end ">
                                     <div class="mr-2">
-                                        <h3 class="text-right">{{ product.name }}</h3>
-                                        <h4 class="text-right text-grey">{{ option.name }}</h4>
+                                        <h3 class="text-left">{{ product.name }}</h3>
+                                        <h4 class="text-left text-grey">{{ option.name }}</h4>
                                     </div>
                                     <v-avatar class="ma-1" size="50" rounded="0">
                                         <v-img :src="product.img"></v-img>
@@ -69,8 +90,8 @@
                                 </div>
                             </div>
                             <div class="d-flex flex-no-wrap justify-space-between ma-2 ">
-                                <h2 class="text-right text-green-darken-1 font-weight-bold mt-2 ml-2">
-                                    {{ parseFloat(option.total_product).toFixed(2) }} د.م
+                                <h2 class="text-left text-green-darken-1 font-weight-bold mt-2 ml-2">
+                                    {{ parseFloat(option.total_product).toFixed(2) }} DH
                                 </h2>
                                 <div class="d-flex justify-space-between">
                                     <v-btn size="large" variant="text" @click="decrementoption(product, option.name)">
@@ -86,6 +107,53 @@
                         </div>
                         <v-divider></v-divider>
                     </div>
+                    <div v-if="this.products[product.id]['addons'].length > 0">
+                        <div v-for="addon in product.addons">
+                            <div v-if="parseFloat(addon.total_product) > 0">
+                                <div class="d-flex flex-no-wrap align-center justify-end ">
+                                    <div class="d-flex flex-no-wrap align-center justify-end ">
+                                        <div class="mr-2">
+                                            <h3 class="text-left">{{ product.name }}</h3>
+                                        </div>
+                                        <v-avatar class="ma-1" size="50" rounded="0">
+                                            <v-img :src="product.img"></v-img>
+                                        </v-avatar>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-center justify-space-between ma-5">
+                                    <div class="mr-2 ">
+                                        <div class="" v-for="key in Object.keys(addon.options)">
+                                            <h4 class="">{{ key }} :</h4>
+                                            <div v-for="addonkey in Object.keys(addon.options[key]['addons'])">
+                                                <h4 v-if="addon.options[key]['addons'][addonkey]['quantity'] > 0"
+                                                    class="text-left text-grey">
+                                                    {{ addon.options[key]['addons'][addonkey]['quantity'] }} x {{
+                                                        addonkey }}
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-no-wrap justify-space-between ma-2 ">
+                                    <h2 class="text-left text-green-darken-1 font-weight-bold mt-2 ml-2">
+                                        {{ parseFloat(addon.total_product).toFixed(2) }} DH
+                                    </h2>
+                                    <div class="d-flex justify-space-between">
+                                        <v-btn class="text-green-darken-1" size="large" variant="text"
+                                            @click="decrementcartaddon(addon)">
+                                            <h1>-</h1>
+                                        </v-btn>
+                                        <h2 class="ma-2">{{ addon.quantity }}</h2>
+                                        <v-btn class="text-green-darken-1" size="large" variant="text"
+                                            @click="incrementcartaddon(addon)">
+                                            <h1>+</h1>
+                                        </v-btn>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <v-divider></v-divider>
+                    </div>
                 </v-card>
             </v-col>
             <v-col :cols="$vuetify.display.mdAndUp ? '6' : '12'">
@@ -93,14 +161,14 @@
                     <h2 class="text-right text-green-darken-1 mt-5 mb-5">معلومات الزبون</h2>
                     <v-card-item class="mt-3">
                         <div class="text-right align-center">
-                            <h3 class="mb-3">الإسم الكامل<v-icon class="ml-2">mdi-pencil-outline</v-icon></h3>
+                            <h3 class="mb-3"><v-icon class="mr-2">mdi-pencil-outline</v-icon>الإسم الكامل</h3>
                             <v-text-field outlined type="text" v-model="fullname" :readonly="loading" dense></v-text-field>
                         </div>
                     </v-card-item>
                     <v-card-item>
                         <div class="text-right align-center">
                             <div style="padding-bottom: 100px;">
-                                <h3 class="mb-3"> * رقم الهاتف<v-icon class="ml-2">mdi-phone-outline</v-icon>
+                                <h3 class="mb-3"><v-icon class="mr-2">mdi-phone-outline</v-icon>* رقم الهاتف
                                 </h3>
                                 <vue-tel-input class="tel-input" v-model="phone" v-bind="bindProps"
                                     @country-changed="countryChanged"></vue-tel-input>
@@ -111,7 +179,7 @@
                     <v-divider class="mb-3"></v-divider>
                     <div class="d-flex justify-space-between ma-5">
                         <h3 class="text-right">
-                            د.م {{ total_products.toFixed(2) }}
+                            د.م   {{ total_products.toFixed(2) }}
                         </h3>
                         <h3 class="text-right">
                             : ثمن المنتجات
@@ -122,20 +190,20 @@
                             د.م {{ total_shipping.toFixed(2) }}
                         </h3>
                         <h3 class="text-right">
-                            : ثمن  الخدمة والتوصيل
+                            : ثمن الخدمة والتوصيل
                         </h3>
                     </div>
                     <v-divider class="mb-3"></v-divider>
                     <div class="d-flex justify-space-between ma-5">
                         <h2 class="text-right">
-                            د.م {{ total_order.toFixed(2) }}
+                            د.م  {{ total_order.toFixed(2) }}
                         </h2>
                         <h2 class="text-right">
                             : الثمن الإجمالي
                         </h2>
                     </div>
                     <v-card-actions class="mb-5">
-                        <v-btn block color="green-darken-1" size="large" variant="elevated" class="text-h5 text-white mt-5"
+                        <v-btn block color="green-darken-1" size="large" variant="elevated" class="text-h6 text-white mt-5"
                             @click="addOrder" :disabled="validform" :loading="loading">
                             أضف طلبك
                         </v-btn>
@@ -147,10 +215,10 @@
     <v-dialog class="dialog" v-model="dialog" width="90%">
         <v-card class="text-center d-flex justify-center">
             <v-card-text class="mb-2">
-                <h2 class="mb-3"><v-icon color="green">mdi-check-circle-outline</v-icon></h2>
+                <h2><v-icon color="green">mdi-check-circle-outline</v-icon></h2>
                 <h3>تم إضافة طلبكم بنجاح</h3>
             </v-card-text>
-            <a ref="whatsappbtn" :href="whatsapplink"  target="_blank" class="text-decoration-none ma-3">
+            <a ref="whatsappbtn" :href="whatsapplink" target="_blank" class="text-decoration-none ma-3">
                 <v-btn block color="green-lighten-1" size="large" variant="elevated" class="text-h6 text-white">
                     إبعث عبر الواتساب
                     <v-icon class="ml-2">mdi-whatsapp</v-icon>
@@ -202,7 +270,7 @@ export default {
             // coordinates form
             valid: false,
             loading: false,
-            required: [(v) => !!v || "لا يجوز أن يُترَك هذا الحقل فارغًا"],
+            required: [(v) => !!v || "Merci de renseigner ce champs"],
             fullname: "",
             phone: '',
             shippingoption: 'delivery',
@@ -221,8 +289,8 @@ export default {
                 required: false,
                 enabledCountryCode: true,
                 enabledFlags: true,
-                preferredCountries: ['MA', 'DZ', 'BH', 'EG', 'KW', 'LB', 'LY', 'OM', 'QA', 'SA', 'TN', 'AE', 'YE', 'SY', 'IQ', 'JO', 'SD', 'MR', 'PS'],
-                onlyCountries: [],
+                preferredCountries: ['MA'],
+                onlyCountries: ['MA'],
                 ignoredCountries: [],
                 autocomplete: "off",
                 name: "phone",
@@ -255,6 +323,11 @@ export default {
                         total += parseFloat(this.products[product]['options'][option]['total_product'])
                     }
                 }
+                else if (this.products[product]['addons'].length > 0) {
+                    for (const addon in this.products[product]['addons']) {
+                        total += parseFloat(this.products[product]['addons'][addon]['total_product'])
+                    }
+                }
                 else {
                     total += parseFloat(this.products[product]['total_product'])
                 }
@@ -263,7 +336,11 @@ export default {
         },
         total_shipping() {
             if (this.shippingoption == 'delivery') {
-                return parseFloat(this.shipcost) +  Math.floor(0.05*this.total_products) + 1
+                if ( Math.floor(0.05 * this.total_products) > 4){
+                return parseFloat(this.shipcost) + 5
+                    
+                }
+                return parseFloat(this.shipcost) + Math.floor(0.05 * this.total_products) + 1
             } else {
                 return 0
             }
@@ -280,28 +357,47 @@ export default {
         whatsapplink() {
             let link = 'https://wa.me/' + this.whatsapp.replace(/\s/g, '') + "?text="
             for (const product in this.products) {
+
+                if (Object.keys(this.products[product]['options']).length == 0 && this.products[product]['addons'].length == 0) {
+                    link += this.products[product]['quantity'] + ' x ' + this.products[product]['name'] + "%0a"
+                }
+
+                // options
                 if (Object.keys(this.products[product]['options']).length > 0) {
                     for (const option in this.products[product]['options']) {
                         link += this.products[product]['options'][option]['quantity'] + ' x ' + this.products[product]['name'] + ' - ' + this.products[product]['options'][option]['name'] + "%0a"
                     }
                 }
-                else {
-                    link += this.products[product]['quantity'] + ' x ' + this.products[product]['name'] + "%0a"
+
+                //addons
+                if (this.products[product]['addons'].length > 0) {
+                    for (const addon in this.products[product]['addons']) {
+                        link += this.products[product]['addons'][addon]['quantity'] + ' x ' + this.products[product]['name'] + "%0a"
+                        for (const option in this.products[product]['addons'][addon]['options']) {
+                            link += '- ' + option + ':' + "%0a"
+                            for (const addonkey in this.products[product]['addons'][addon]['options'][option]['addons']) {
+                                if (parseFloat(this.products[product]['addons'][addon]['options'][option]['addons'][addonkey]['quantity']) > 0) {
+                                    link += '-- ' + this.products[product]['addons'][addon]['options'][option]['addons'][addonkey]['quantity'] + ' x ' + addonkey + "%0a"
+                                }
+
+                            }
+
+                        }
+                    }
                 }
+                link+="%0a"
             }
-            if (this.shippingoption == 'pickup') {
-                link += 'إستلام من المتجر' + "%0a"
-            } else {
-                link += 'شحن و توصيل' + "%0a"
-            }
-            link += 'Total' + ": " + this.total_order + ' DH' + "%0a"
+
+            link += 'المنتجات' + ": " + this.total_order + 'د.م' + "%0a"
+            link += 'الخدمة والتوصيل' + ": " + this.total_shipping + 'د.م' + "%0a"
+            link += ' الثمن الإجمالي' + ": " + this.total_order + 'د.م' + "%0a"
 
             link += "%0a" + 'https://www.matjary.app/orders/' + this.orderId
 
             return link
         },
         productList() {
-            var cartProducts = Object.values(this.products);
+            var cartProducts = JSON.parse(JSON.stringify(Object.values(this.products)));
 
             for (const product in cartProducts) {
                 if (Object.keys(cartProducts[product]['options']).length > 0) {
@@ -319,6 +415,7 @@ export default {
                     cartProducts[product]['addons'] = ''
                 }
             }
+
             return cartProducts
         },
 
@@ -372,6 +469,18 @@ export default {
             }
             this.saveCartInCookies()
         },
+        incrementcartaddon(addon) {
+            addon.quantity += 1;
+            addon.total_product = parseFloat(addon.quantity) * (parseFloat(addon.price) + parseFloat(addon.total_addons))
+            this.saveCartInCookies()
+        },
+        decrementcartaddon(addon) {
+            if (addon.quantity > 0) {
+                addon.quantity -= 1;
+                addon.total_product = parseFloat(addon.quantity) * (parseFloat(addon.price) + parseFloat(addon.total_addons))
+                this.saveCartInCookies()
+            }
+        },
         removeproduct(product) {
             delete this.products[product.id]
             Cookies.set(("cart_" + this.storeId), JSON.stringify(this.products))
@@ -394,13 +503,13 @@ export default {
                 .post(`/order/create`, fd)
                 .then((response) => {
                     if (response.status === 200) {
+                        console.log(this.whatsapplink)
                         Cookies.set(("cart_" + this.storeId), JSON.stringify({}))
                         this.orderId = response.data.id
                         this.dialog = true
                         this.loading = false
                     }
                 });
-
         }
     },
 
@@ -418,8 +527,6 @@ export default {
                 this.shipcost = response.data.shipcost
                 this.pickup = response.data.pickup
                 this.whatsapp = response.data.whatsapp
-                this.telephone = response.data.telephone
-                this.maps = response.data.maps
             })
             .catch((err) => { });
 

@@ -9,8 +9,9 @@ import HomeView from '../views/HomeView.vue'
 
 
 // Store
-import StoreDetail from '../views/store/StoreIndexView.vue'
+import StoreHome from '../views/store/StoreHomeView.vue'
 import CategorieDetail from '../views/store/CategorieDetailView.vue'
+import SubStoreDetail from '../views/store/SubStoreDetailView.vue'
 import ProductDetail from '../views/store/ProductDetailView.vue'
 import CartDetail from '../views/store/StoreCart.vue'
 import frCartDetail from '../views/store/frStoreCart.vue'
@@ -62,15 +63,21 @@ const routes = [
   //Store
   {
     path: '/:storeId',
-    name: 'storedetail',
+    name: 'storehome',
     meta: { extend: true, requiresAuth: false , white: true  },
-    component: StoreDetail
+    component: StoreHome
   },
   {
-    path: '/:storeId/:categorieId',
+    path: '/:storeId/c/:categorieId',
     name: 'storecategoriedetail',
     meta: { extend: true, requiresAuth: false , white: true  },
     component: CategorieDetail
+  },
+  {
+    path: '/:storeId/s/:substoreId',
+    name: 'substoredetail',
+    meta: { extend: true, requiresAuth: false , white: true  },
+    component: SubStoreDetail
   },
   {
     path: '/:storeId/:productId',
@@ -79,7 +86,7 @@ const routes = [
     component: ProductDetail
   },
   {
-    path: '/:storeId/ar/checkout',
+    path: '/:storeId/checkout',
     name: 'arstorecart',
     meta: { extend: true, requiresAuth: false, white: true  },
     component: CartDetail

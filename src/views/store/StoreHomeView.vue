@@ -3,7 +3,7 @@
         <div class="d-flex justify-center align-center ">
             <div>
                 <router-link class="text-decoration-none text-black" :to="{
-                    name: 'storedetail',
+                    name: 'storehome',
                     params: { storeId: this.storeId }
                 }">
                     <v-img height="120" :src="logo == null || logo == ''
@@ -14,14 +14,38 @@
                 </router-link>
             </div>
         </div>
+        <div class=" d-flex align-center justify-center ma-5">
+
+            <a class="text-decoration-none text-black" target="_blank"
+                :href="'https://wa.me/' + telephone.replace(/\s/g, '')">
+                <v-btn class="ma-5" variant="text" icon color="">
+                    <v-icon size="42">mdi-whatsapp</v-icon>
+                </v-btn>
+            </a>
+            <router-link class="text-decoration-none text-black d-flex justify-center" :to="{
+                name: 'storehome',
+                params: { storeId: this.storeId }
+            }">
+                <v-btn  class="ma-5" variant="text"  icon>
+                    <v-icon size="43">mdi-home-outline</v-icon>
+                </v-btn>
+            </router-link>
+            <v-btn  class="ma-5" variant="text" icon @click.stop="drawer = !drawer">
+                <v-badge color="red" v-if="iscart" dot>
+                    <v-icon size="40">mdi-shopping-outline</v-icon>
+                </v-badge>
+
+                <v-icon size="40" v-if="!iscart">mdi-shopping-outline</v-icon>
+            </v-btn>
+        </div>
         <v-divider class="ma-5"></v-divider>
     </div>
     <div :class="$vuetify.display.mdAndUp ? 'homecontainer-lg' : 'homecontainer-sm'">
-        <h3 v-if="categories.length == 0" class="text-center"><v-icon size="60">mdi-shopping-search-outline</v-icon></h3>
         <v-row class="d-flex flex-row-reverse ">
             <v-col v-for="(categorie, index) in categories" :key="categories.id"
                 :cols="$vuetify.display.mdAndUp ? '4' : '12'">
-                <v-card class="mb-1" elevation="1" :to="{ name: 'storecategoriedetail', params: { storeId:storeId,categorieId: categorie.name } }">
+                <v-card class="mb-1" elevation="1"
+                    :to="{ name: 'storecategoriedetail', params: { storeId: storeId, categorieId: categorie.name } }">
                     <div class="d-flex justify-space-between align-center">
                         <div class="text-green ma-5">
                             <h3><v-icon>mdi-chevron-left</v-icon></h3>
@@ -42,11 +66,35 @@
                 </v-card>
             </v-col>
         </v-row>
+        <v-row class="d-flex flex-row-reverse ">
+            <v-col v-for="(store, index) in storeslist" :key="store.id" :cols="$vuetify.display.mdAndUp ? '4' : '12'">
+                <v-card class="mb-1" elevation="1"
+                    :to="{ name: 'substoredetail', params: { storeId: storeId, substoreId: store.id } }">
+                    <div class="d-flex justify-space-between align-center">
+                        <div class="text-green ma-5">
+                            <h3><v-icon>mdi-chevron-left</v-icon></h3>
+                        </div>
+                        <div class="d-flex flex-no-wrap align-center justify-end ma-1">
+                            <div class="mr-2">
+                                <h3 class="text-right">{{ store.name }}</h3>
+                            </div>
+                            <div class="d-flex flex-no-wrap justify-center ma-1">
+                                <v-avatar class="ma-3" size="80" rounded="0">
+                                    <v-img :src="store.logo == null || store.logo == ''
+                                        ? imgvoid
+                                        : store.logo"></v-img>
+                                </v-avatar>
+                            </div>
+                        </div>
+                    </div>
+                </v-card>
+            </v-col>
+        </v-row>
     </div>
-    <v-bottom-navigation v-if="showCart" style="height: 70px;" elevation="0">
+    <!-- <v-bottom-navigation v-if="showCart" style="height: 70px;" elevation="0">
         <v-icon class="float d-flex justify-center align-center" size="x-large" icon="mdi-shopping-outline"
             @click.stop="drawer = !drawer"></v-icon>
-    </v-bottom-navigation>
+    </v-bottom-navigation> -->
     <v-navigation-drawer v-model="drawer" location="right" style="padding: 10px;" temporary>
         <h3 class="text-center mt-2 mb-5">{{ $t('store.products') }}</h3>
         <v-divider class="mb-5"></v-divider>
@@ -204,7 +252,8 @@ export default {
             storename: '',
             logo: '',
             allproducts: '',
-            categories:'',
+            categories: '',
+            storeslist: '',
             selectedCategory: '',
             lang: 'ar',
             // product detail
@@ -472,7 +521,9 @@ export default {
         axios
             .get(`/store/${this.storeId}`)
             .then((response) => {
-                this.categories= response.data.categories
+                this.telephone = response.data.telephone
+                this.categories = response.data.categories
+                this.storeslist = response.data.storeslist
                 this.storename = response.data.storename
                 this.logo = response.data.logo
                 this.lang = response.data.lang

@@ -3,7 +3,7 @@
         <div class="d-flex justify-center align-center ">
             <div>
                 <router-link class="text-decoration-none text-black" :to="{
-                    name: 'storedetail',
+                    name: 'storehome',
                     params: { storeId: this.storeId }
                 }">
                     <v-img height="120" :src="logo == null || logo == ''
@@ -14,17 +14,30 @@
                 </router-link>
             </div>
         </div>
-        <div class=" d-flex align-center justify-center mt-3">
-            <div class="text-center ma-3 pa-3">
-                <v-icon class="mb-1" color="grey-darken-3" icon="mdi-phone-in-talk-outline" size="35"></v-icon>
-            </div>
-            <div class="text-center ma-3 pa-3">
-                <v-icon class="mb-1" color="grey-darken-3" icon="mdi-whatsapp" size="35"></v-icon>
-            </div>
-            <div class="text-center ma-3 pa-3">
-                <v-icon class="mb-1" color="grey-darken-3" icon="mdi-map-marker-radius-outline" size="35"></v-icon>
-            </div>
+        <div class=" d-flex align-center justify-center ma-5">
+            <a class="text-decoration-none text-black" target="_blank"
+                :href="'https://wa.me/' + telephone.replace(/\s/g, '')">
+                <v-btn class="ma-5" variant="text" icon color="">
+                    <v-icon size="42">mdi-whatsapp</v-icon>
+                </v-btn>
+            </a>
+            <router-link class="text-decoration-none text-black d-flex justify-center" :to="{
+                name: 'storehome',
+                params: { storeId: this.storeId }
+            }">
+                <v-btn  class="ma-5" variant="text"  icon>
+                    <v-icon size="43">mdi-home-outline</v-icon>
+                </v-btn>
+            </router-link>
+            <v-btn  class="ma-5" variant="text" icon @click.stop="drawer = !drawer">
+                <v-badge color="red" v-if="iscart" dot>
+                    <v-icon size="40">mdi-shopping-outline</v-icon>
+                </v-badge>
+
+                <v-icon size="40" v-if="!iscart">mdi-shopping-outline</v-icon>
+            </v-btn>
         </div>
+        <v-divider class="ma-5"></v-divider>
     </div>
 
     <v-divider class="mb-5"></v-divider>
