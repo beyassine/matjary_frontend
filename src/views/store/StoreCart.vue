@@ -336,11 +336,7 @@ export default {
         },
         total_shipping() {
             if (this.shippingoption == 'delivery') {
-                if ( Math.floor(0.05 * this.total_products) > 4){
-                return parseFloat(this.shipcost) + 5
-                    
-                }
-                return parseFloat(this.shipcost) + Math.floor(0.05 * this.total_products) + 1
+                return parseFloat(this.shipcost)
             } else {
                 return 0
             }

@@ -72,7 +72,7 @@
                         <div class="d-flex flex-no-wrap align-center justify-end ma-1">
                             <div class="mr-2">
                                 <h3 class="text-right">{{ product.productname }}</h3>
-                                <h3 class="text-right font-weight-bold mt-2 ml-2">
+                                <h3 v-if="!product.options || product.options.length == 0" class="text-right font-weight-bold mt-2 ml-2">
                                     {{ parseFloat(product.unitprice).toFixed(2) }} {{ $t('currency.DH') }}
                                 </h3>
                             </div>
