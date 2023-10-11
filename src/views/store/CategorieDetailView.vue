@@ -49,7 +49,7 @@
             </v-col>
             <v-col v-for="(product, index) in categoryProducts" :key="product.id"
                 :cols="$vuetify.display.mdAndUp ? '4' : '12'">
-                <v-card @click="showProduct(product)" class="mb-1" elevation="1">
+                <v-card v-if="parseFloat(product.unitprice)>0" @click="showProduct(product)" class="mb-1" elevation="1">
                     <div class="d-flex justify-space-between align-center">
                         <div class="text-green ma-5">
                             <h1>+</h1>
