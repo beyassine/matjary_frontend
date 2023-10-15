@@ -384,7 +384,7 @@ export default {
                 link+="%0a"
             }
 
-            link += 'المنتجات' + ": " + this.total_order + 'د.م' + "%0a"
+            link += 'المنتجات' + ": " + this.total_products + 'د.م' + "%0a"
             link += 'الخدمة والتوصيل' + ": " + this.total_shipping + 'د.م' + "%0a"
             link += ' الثمن الإجمالي' + ": " + this.total_order + 'د.م' + "%0a"
 
